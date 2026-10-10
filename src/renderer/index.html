@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'">
+<title>桌面物理篮球</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    overflow: hidden; background: transparent;
+    -webkit-user-select: none; user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    cursor: default;
+    font-family: "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  }
+  canvas { position: fixed; left: 0; top: 0; display: block; }
+  #stat { z-index: 0; }
+  #dyn  { z-index: 1; }
+
+  /* ---------- 左下角 / 右下角 快捷控制栏 ---------- */
+  /* 两侧各一组（+ / −），常显、不自动淡出 —— 旧版 5 秒后降到 opacity .13，
+     深色半透明底铺在桌面上基本等于隐形，会被当成"按钮不见了"（见 app.js 注释）。
+     ⚠️ 右侧那组不能贴 right:7px：篮球架的立柱在 x≈[W-30, W-15] 一路落到地面、
+     底座一直铺到右边沿（见 physics.js::setHoop 的 poleX = w-22），按钮压上去会
+     把架子盖掉。所以让开 52px，正好落在立柱左侧、不遮架子。 */
+  .bar {
+    position: fixed; bottom: 7px; z-index: 10;
+    display: flex; flex-direction: column; gap: 7px;
+    opacity: .9; transition: opacity .28s ease;
+  }
+  #barL { left: 7px; }
+  #barR { right: 52px; }
+  .bar.hot { opacity: 1; }
+  .bar button {
+    width: 32px; height: 32px; padding: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.55);
+    background: rgba(24,28,36,.78);
+    color: #fff; font: 700 18px/1 "Segoe UI", sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; touch-action: none;
+    box-shadow: 0 2px 7px rgba(0,0,0,.35);
+    transition: transform .09s ease, background .15s ease;
+  }
+  .bar button:hover { background: rgba(232,85,31,.92); }
+  .bar button:active { transform: scale(.9); }
+  /* 「设置」按钮：只换字形，其余（尺寸/圆角/描边/底色/悬停/按下）完全沿用上面 .bar button，
+     保证与 +/− 视觉一致。margin-bottom 把它和加/减两颗球分开一寸，形成"设置 | 加/减"的分组。
+     ⚠️ 它必须留在 .bar 容器内：窗口区域是靠 barRects() 量整个 .bar 的外接矩形上报的，
+     独立出去就得再补一条上报，否则按钮会被 SetWindowRgn 从可见范围里裁掉。 */
+  .bar button.cfg {
+    margin-bottom: 5px;
+    font: 400 17px/1 "Segoe UI Symbol", "Segoe UI", sans-serif;
+  }
+
+  /* ---------- 右键菜单 ---------- */
+  /* max-height / overflow：菜单有 20+ 项、高约 700px，小分辨率（≤768 高）下会超出
+     窗口。超出部分本来会被 app.js 的钳制推到屏幕外、永远点不到；改成菜单内部滚动后，
+     任何屏幕高度都能完整访问到全部设置项（窗口区域在菜单打开时是整窗，不影响点击）。 */
+  #menu {
+    position: fixed; z-index: 20; display: none;
+    min-width: 190px; padding: 6px;
+    max-height: calc(100vh - 12px); overflow-y: auto;
+    border-radius: 11px;
+    background: rgba(30,34,42,.94);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    color: #eef2f8; font-size: 13px;
+  }
+  #menu .mi {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 18px; padding: 7px 10px; border-radius: 7px; cursor: pointer;
+    white-space: nowrap;
+  }
+  #menu .mi:hover { background: rgba(255,255,255,.13); }
+  #menu .mi .k { font-size: 11px; opacity: .45; }
+  #menu .mi .v { font-size: 12px; opacity: .78; }
+  #menu .mi.on .v { color: #7fd8a0; }
+  #menu .mi.off .v { opacity: .45; }
+  #menu .sep { height: 1px; margin: 5px 8px; background: rgba(255,255,255,.12); }
+
+  /* ---------- 顶部记分板 ---------- */
+  /* ⚠️ 它是 DOM、不是 canvas：不会让主循环保持在 rAF 频率（分数只在进球时变一次），
+     但正因为它是 DOM，窗口区域必须把它算进去 —— SetWindowRgn 之外不绘制。
+     见 app.js 的 hudRect()。代价是顶部中央有一小块"能点但点不进桌面"的死区
+     （和左右控制栏同理，尺寸相当），因此做成可开关（托盘/菜单「记分板」）。 */
+  #hud {
+    position: fixed; left: 50%; top: 10px; transform: translateX(-50%);
+    z-index: 10; display: flex; align-items: center; gap: 15px;
+    padding: 6px 15px; border-radius: 999px;
+    background: rgba(20,24,32,.62);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 4px 15px rgba(0,0,0,.34);
+    color: #eef4ff; font-size: 12px; white-space: nowrap;
+    pointer-events: none;
+  }
+  #hud.hide { display: none; }
+  #hud .cell { display: flex; align-items: baseline; gap: 5px; }
+  #hud .k { font-size: 11px; opacity: .58; }
+  #hud b { font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: .3px; }
+  #hud .cell.combo b { color: #ffb0d6; }
+  #hud .cell.high b { color: #ffd166; }
+  #hud .cell.combo.hot b { color: #fff; text-shadow: 0 0 9px #ff5fa8; }
+
+  /* ---------- 提示 / 性能 ---------- */
+  #toast {
+    position: fixed; left: 50%; bottom: 74px; transform: translateX(-50%);
+    z-index: 30; padding: 8px 16px; border-radius: 999px;
+    background: rgba(22,26,32,.88); color: #fff; font-size: 13px;
+    opacity: 0; transition: opacity .25s ease; pointer-events: none;
+    white-space: nowrap;
+  }
+  #toast.show { opacity: 1; }
+  #perf {
+    position: fixed; left: 8px; top: 8px; z-index: 30; display: none;
+    padding: 7px 10px; border-radius: 8px;
+    background: rgba(14,17,22,.72); color: #9ee6b4;
+    font: 11px/1.5 Consolas, "Cascadia Mono", monospace;
+    white-space: pre; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <canvas id="stat"></canvas>
+  <canvas id="dyn"></canvas>
+
+  <!-- 设置按钮放在列首（最上面）：这样 + / − 两颗球仍贴着屏幕底角，位置与旧版一致，
+       不会被新按钮顶上去。菜单本身是 DOM，openMenu() 会先改窗口区域再显示，见 app.js。 -->
+  <div id="barL" class="bar">
+    <button class="cfg" title="设置（与右键菜单相同）">⚙</button>
+    <button class="add" title="增加一颗篮球 (Ctrl+Shift+↑)">+</button>
+    <button class="del" title="减少一颗篮球 (Ctrl+Shift+↓)">−</button>
+  </div>
+  <div id="barR" class="bar">
+    <button class="cfg" title="设置（与右键菜单相同）">⚙</button>
+    <button class="add" title="增加一颗篮球 (Ctrl+Shift+↑)">+</button>
+    <button class="del" title="减少一颗篮球 (Ctrl+Shift+↓)">−</button>
+  </div>
+
+  <div id="hud">
+    <div class="cell score"><span class="k">得分</span><b id="hudScore">0</b></div>
+    <div class="cell combo" id="hudComboCell"><span class="k">连击</span><b id="hudCombo">×0</b></div>
+    <div class="cell high"><span class="k">最高</span><b id="hudHigh">0</b></div>
+  </div>
+
+  <div id="menu"></div>
+  <div id="toast"></div>
+  <div id="perf"></div>
+
+  <script src="00-probe.js"></script>
+  <script src="vendor/matter.min.js"></script>
+  <script src="physics.js"></script>
+  <script src="render.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

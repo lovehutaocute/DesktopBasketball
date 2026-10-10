@@ -1,0 +1,643 @@
+{
+  "at": "2026-09-29T15:38:06.442Z",
+  "electron": "38.8.6",
+  "chrome": "140.0.7339.249",
+  "forceNoGpu": true,
+  "softwareCompositing": true,
+  "ballCount": 20,
+  "logicalCores": 6,
+  "cpuModel": "Intel(R) Core(TM) i5-8500 CPU @ 3.00GHz",
+  "screen": {
+    "x": 0,
+    "y": 0,
+    "width": 1440,
+    "height": 852
+  },
+  "warmSec": 8,
+  "settleSec": 6,
+  "activeSec": 20,
+  "idleSec": 20,
+  "active": {
+    "samples": 20,
+    "avgCorePct": 17.24,
+    "maxCorePct": 19,
+    "avgMachinePct": 2.87,
+    "byType": {
+      "Browser": 5.25,
+      "Utility": 0,
+      "Tab": 12
+    },
+    "avgWakeups": 0
+  },
+  "settle": {
+    "samples": 6,
+    "avgCorePct": 14.67,
+    "maxCorePct": 20.37,
+    "avgMachinePct": 2.45,
+    "byType": {
+      "Browser": 3.31,
+      "Utility": 0,
+      "Tab": 11.36
+    },
+    "avgWakeups": 0
+  },
+  "idle": {
+    "samples": 22,
+    "avgCorePct": 0.19,
+    "maxCorePct": 0.39,
+    "avgMachinePct": 0.03,
+    "byType": {
+      "Browser": 0.06,
+      "Utility": 0,
+      "Tab": 0.13
+    },
+    "avgWakeups": 0
+  },
+  "wakeLatency": {
+    "idle": true,
+    "samples": 5,
+    "avgMs": 2.2,
+    "maxMs": 9.4,
+    "p50Ms": 0.5
+  },
+  "rendererActive": "{\"w\":1440,\"h\":852,\"dpr\":1,\"balls\":20,\"pos\":[[611,341,0,-4,599],[1396,187,0,-100,460],[705,614,0,134,339],[1161,291,0,209,671],[294,251,0,311,510],[86,201,0,-35,96],[712,175,0,118,591],[791,796,0,-489,-413],[480,384,0,-395,689],[1404,391,0,-141,-616],[184,276,0,111,710],[929,361,0,-98,273],[401,185,0,45,641],[493,509,0,-206,940],[876,444,0,345,263],[453,271,0,-204,445],[1183,72,0,-152,-5],[1099,108,0,-257,348],[219,402,0,257,687],[1266,390,0,-178,131]],\"fps\":74.6,\"physMs\":0.05,\"physMaxMs\":1.7,\"drawMs\":0.6,\"tiles\":44,\"tilesTotal\":84,\"pairs\":1,\"hoop\":true,\"score\":0,\"idle\":false,\"wakeLatMs\":8.7,\"hoops\":{\"cx\":1282,\"rimY\":522,\"on\":true}}",
+  "rendererIdle": "{\"w\":1440,\"h\":852,\"dpr\":1,\"balls\":20,\"pos\":[[415,818,1,0,0],[921,818,1,0,0],[718,818,1,0,0],[1097,818,1,0,0],[342,818,1,0,0],[272,818,1,0,0],[786,818,1,0,0],[989,818,1,0,0],[650,818,1,0,0],[1397,391,1,0,0],[184,818,1,0,0],[1042,778,1,0,0],[601,772,1,0,0],[69,818,1,0,0],[1339,818,1,0,0],[552,818,1,0,0],[1173,818,1,0,0],[853,818,1,0,0],[484,818,1,0,0],[1406,818,1,0,0]],\"fps\":18.4,\"physMs\":0.06,\"physMaxMs\":0,\"drawMs\":0.2,\"tiles\":2,\"tilesTotal\":84,\"pairs\":31,\"hoop\":true,\"score\":2,\"idle\":true,\"wakeLatMs\":1,\"hoops\":{\"cx\":1282,\"rimY\":522,\"on\":true}}",
+  "samples": [
+    {
+      "t": 9,
+      "phase": "active",
+      "total": 16.93,
+      "by": {
+        "Browser": 5.08,
+        "Utility": 0,
+        "Tab": 11.85
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 10,
+      "phase": "active",
+      "total": 17.94,
+      "by": {
+        "Browser": 5.84,
+        "Utility": 0,
+        "Tab": 12.1
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 11,
+      "phase": "active",
+      "total": 19,
+      "by": {
+        "Browser": 6.68,
+        "Utility": 0,
+        "Tab": 12.32
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 12,
+      "phase": "active",
+      "total": 17.41,
+      "by": {
+        "Browser": 5.42,
+        "Utility": 0,
+        "Tab": 11.99
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 13,
+      "phase": "active",
+      "total": 16.85,
+      "by": {
+        "Browser": 4.93,
+        "Utility": 0,
+        "Tab": 11.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 14,
+      "phase": "active",
+      "total": 16.86,
+      "by": {
+        "Browser": 4.83,
+        "Utility": 0,
+        "Tab": 12.04
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 15,
+      "phase": "active",
+      "total": 17.32,
+      "by": {
+        "Browser": 5.36,
+        "Utility": 0,
+        "Tab": 11.95
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 16,
+      "phase": "active",
+      "total": 17.07,
+      "by": {
+        "Browser": 5.04,
+        "Utility": 0,
+        "Tab": 12.03
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 17,
+      "phase": "active",
+      "total": 17.3,
+      "by": {
+        "Browser": 5.42,
+        "Utility": 0,
+        "Tab": 11.88
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 18,
+      "phase": "active",
+      "total": 17.25,
+      "by": {
+        "Browser": 5.11,
+        "Utility": 0,
+        "Tab": 12.14
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 19,
+      "phase": "active",
+      "total": 16.92,
+      "by": {
+        "Browser": 4.89,
+        "Utility": 0,
+        "Tab": 12.03
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 20,
+      "phase": "active",
+      "total": 16.79,
+      "by": {
+        "Browser": 4.87,
+        "Utility": 0,
+        "Tab": 11.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 21,
+      "phase": "active",
+      "total": 16.58,
+      "by": {
+        "Browser": 4.79,
+        "Utility": 0,
+        "Tab": 11.79
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 22,
+      "phase": "active",
+      "total": 17.36,
+      "by": {
+        "Browser": 5.38,
+        "Utility": 0,
+        "Tab": 11.98
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 23,
+      "phase": "active",
+      "total": 17.46,
+      "by": {
+        "Browser": 5.24,
+        "Utility": 0,
+        "Tab": 12.22
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 24,
+      "phase": "active",
+      "total": 17.46,
+      "by": {
+        "Browser": 5.53,
+        "Utility": 0,
+        "Tab": 11.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 25,
+      "phase": "active",
+      "total": 16.71,
+      "by": {
+        "Browser": 4.81,
+        "Utility": 0,
+        "Tab": 11.9
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 26,
+      "phase": "active",
+      "total": 16.74,
+      "by": {
+        "Browser": 4.75,
+        "Utility": 0,
+        "Tab": 11.99
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 27,
+      "phase": "active",
+      "total": 17.24,
+      "by": {
+        "Browser": 5.27,
+        "Utility": 0,
+        "Tab": 11.97
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 28,
+      "phase": "active",
+      "total": 17.68,
+      "by": {
+        "Browser": 5.72,
+        "Utility": 0,
+        "Tab": 11.96
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 29,
+      "phase": "settle",
+      "total": 17.9,
+      "by": {
+        "Browser": 5.78,
+        "Utility": 0,
+        "Tab": 12.12
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 30,
+      "phase": "settle",
+      "total": 20.11,
+      "by": {
+        "Browser": 4.89,
+        "Utility": 0,
+        "Tab": 15.23
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 31,
+      "phase": "settle",
+      "total": 20.37,
+      "by": {
+        "Browser": 3.18,
+        "Utility": 0,
+        "Tab": 17.19
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 32,
+      "phase": "settle",
+      "total": 17.53,
+      "by": {
+        "Browser": 2.98,
+        "Utility": 0,
+        "Tab": 14.55
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 33,
+      "phase": "settle",
+      "total": 10.6,
+      "by": {
+        "Browser": 2.54,
+        "Utility": 0,
+        "Tab": 8.06
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 34,
+      "phase": "settle",
+      "total": 1.53,
+      "by": {
+        "Browser": 0.5,
+        "Utility": 0,
+        "Tab": 1.03
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 35,
+      "phase": "idle",
+      "total": 0.15,
+      "by": {
+        "Browser": 0.05,
+        "Utility": 0,
+        "Tab": 0.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 36,
+      "phase": "idle",
+      "total": 0.2,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.13
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 37,
+      "phase": "idle",
+      "total": 0.18,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.12
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 38,
+      "phase": "idle",
+      "total": 0.2,
+      "by": {
+        "Browser": 0.07,
+        "Utility": 0,
+        "Tab": 0.14
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 39,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 40,
+      "phase": "idle",
+      "total": 0.39,
+      "by": {
+        "Browser": 0.05,
+        "Utility": 0,
+        "Tab": 0.34
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 41,
+      "phase": "idle",
+      "total": 0.36,
+      "by": {
+        "Browser": 0.07,
+        "Utility": 0,
+        "Tab": 0.3
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 42,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 43,
+      "phase": "idle",
+      "total": 0.12,
+      "by": {
+        "Browser": 0.04,
+        "Utility": 0,
+        "Tab": 0.08
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 44,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 45,
+      "phase": "idle",
+      "total": 0.12,
+      "by": {
+        "Browser": 0.04,
+        "Utility": 0,
+        "Tab": 0.08
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 46,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 47,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 48,
+      "phase": "idle",
+      "total": 0.18,
+      "by": {
+        "Browser": 0.07,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 49,
+      "phase": "idle",
+      "total": 0.13,
+      "by": {
+        "Browser": 0.04,
+        "Utility": 0,
+        "Tab": 0.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 50,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 51,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 52,
+      "phase": "idle",
+      "total": 0.18,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 53,
+      "phase": "idle",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.11
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 54,
+      "phase": "idle",
+      "total": 0.13,
+      "by": {
+        "Browser": 0.05,
+        "Utility": 0,
+        "Tab": 0.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 55,
+      "phase": "idle",
+      "total": 0.29,
+      "by": {
+        "Browser": 0.1,
+        "Utility": 0,
+        "Tab": 0.18
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 56,
+      "phase": "idle",
+      "total": 0.2,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.13
+      },
+      "procs": 3,
+      "wakeups": 0
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>火焰拖尾 / 金球 预览</title>
+<style>
+  html,body{margin:0;background:#eef1f6;font:13px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;color:#222;zoom:.62}
+  .row{display:flex;gap:12px;padding:8px;align-items:flex-start;flex-wrap:wrap}
+  canvas{background:#eef1f6;display:block}
+  .cap{font-size:12px;color:#555;padding:2px 0}
+  .card{background:#fff;border:1px solid #d8dee8;border-radius:8px;padding:8px}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="card"><div class="cap">金球纹理特写 2x（看车削拉丝 / 星形刻纹 / 镜面点）</div><canvas id="zoom" width="1180" height="720"></canvas></div>
+</div>
+<div class="row">
+  <div class="card"><div class="cap">金球 · 放大 3 个旋转角（对照经典篮球）</div><canvas id="gold" width="1180" height="400"></canvas></div>
+</div>
+<div class="row">
+  <div class="card"><div class="cap">金球 / 经典球 · 真实尺寸 68px</div><canvas id="small" width="560" height="140"></canvas></div>
+</div>
+<div class="row">
+  <div class="card"><div class="cap">火焰拖尾（自上而下：新→旧 6 段火焰）</div><canvas id="fire" width="760" height="260"></canvas></div>
+</div>
+<div class="row">
+  <div class="card"><div class="cap">拖尾对照：火焰 vs 残影（球向右飞，速度 14px/步）</div><canvas id="cmp" width="1120" height="220"></canvas></div>
+</div>
+
+<div id="host" style="position:absolute;left:-4000px;top:0;width:900px;height:520px">
+  <canvas id="stat" width="900" height="520"></canvas>
+  <canvas id="dyn" width="900" height="520"></canvas>
+</div>
+
+<script src="../src/renderer/render.js"></script>
+<script>
+(function () {
+  const R = new PB.Renderer(document.getElementById('dyn'), document.getElementById('stat'));
+  R.resize(900, 520, 1);
+
+  function drawBallScaled(g, skin, r, angle) {
+    const set = R.texFor(skin);
+    const d = r * 2;
+    g.save();
+    g.translate(0, 0);
+    g.save();
+    g.rotate(angle);
+    const img = set.single || set.body;
+    if (set.single) { g.drawImage(set.single, -r, -r, d, d); }
+    else {
+      g.drawImage(set.base, -r, -r, d, d);
+      g.save(); g.translate(-r, -r); g.drawImage(set.seam, 0, 0, d, d); g.restore();
+      g.drawImage(set.hi, -r, -r, d, d);
+    }
+    g.restore();
+    g.restore();
+  }
+
+  // ---- 1. 金球放大
+  const gc = document.getElementById('gold');
+  const gg = gc.getContext('2d');
+  gg.imageSmoothingQuality = 'high';
+  const rows = [['gold', 0], ['gold', 0.62], ['gold', 1.9], ['classic', 0.35]];
+  rows.forEach(([skin, ang], i) => {
+    const cx = 155 + i * 292, cy = 200;
+    gg.save();
+    gg.translate(cx, cy);
+    drawBallScaled(gg, skin, 150, ang);
+    gg.restore();
+    gg.fillStyle = '#444'; gg.font = '12px "Segoe UI"';
+    gg.fillText(skin + ' ' + (ang * 180 / Math.PI).toFixed(0) + '°', cx - 46, 380);
+  });
+  // 金球 8x 特写（看拉丝纹、星形刻纹、镜面点）—— 注意 RT 用 master 320² 才不会糊
+  const zc = document.getElementById('zoom');
+  const zg = zc.getContext('2d');
+  zg.imageSmoothingQuality = 'high';
+  zg.save(); zg.translate(360, 360);
+  const mset = R.texFor('gold');
+  zg.drawImage(mset.master.base, -300, -300, 600, 600);
+  zg.restore();
+  zg.save(); zg.translate(900, 360);
+  zg.drawImage(mset.body, -300, -300, 600, 600);
+  zg.restore();
+  zg.fillStyle = '#444'; zg.font = '13px "Segoe UI"';
+  zg.fillText('base 母版（拉丝 + 星纹 + 明暗）', 130, 700);
+  zg.fillText('head（base + hi 复合后，实际每帧画的就是它）', 610, 700);
+
+  // ---- 2. 真实尺寸
+  const sc = document.getElementById('small');
+  const sg = sc.getContext('2d');
+  sg.imageSmoothingQuality = 'high';
+  [['gold', 90], ['gold', 250], ['classic', 410]].forEach(([skin, x]) => {
+    sg.save(); sg.translate(x, 70); drawBallScaled(sg, skin, 34, 0.3); sg.restore();
+  });
+
+  // ---- 3. 火焰拖尾：造一颗假球，历史点沿一条弧线排开
+  const fc = document.getElementById('fire');
+  const fg = fc.getContext('2d');
+  fg.imageSmoothingQuality = 'high';
+  const ballR = 26;
+  const pts = [];
+  for (let i = 0; i < 7; i++) {
+    const t = i / 6;
+    pts.push({ x: 130 + t * 500, y: 210 - Math.sin(t * Math.PI) * 90 });
+  }
+  const b = {
+    r: ballR, golden: true, skin: 'gold',
+    body: { position: pts[6], velocity: { x: 600, y: -260 }, angle: 0, isSleeping: false },
+    _trail: pts.slice(),
+  };
+  R.setTrail(true);
+  R.setTrailStyle('fire');
+  R._trailBudget = 999;
+  R.drawTrail(fg, b, R.texFor('gold'), ballR);
+  fg.save(); fg.translate(pts[6].x, pts[6].y); drawBallScaled(fg, 'gold', ballR, 0.4); fg.restore();
+
+  // ---- 4. 火焰 vs 残影
+  const cc = document.getElementById('cmp');
+  const cg = cc.getContext('2d');
+  cg.imageSmoothingQuality = 'high';
+  const mkBall = (y) => {
+    const p = [];
+    for (let i = 0; i < 7; i++) p.push({ x: 90 + i * 78, y: y });
+    return {
+      r: 26, skin: null,
+      body: { position: p[6], velocity: { x: 780, y: 0 }, angle: 0.3, isSleeping: false },
+      _trail: p.slice(),
+    };
+  };
+  R._trailBudget = 999;
+  R.setTrailStyle('fire');
+  const b1 = mkBall(60);
+  R.drawTrail(cg, b1, R.tex, 26);
+  cg.save(); cg.translate(90 + 6 * 78, 60); drawBallScaled(cg, 'classic', 26, 0.3); cg.restore();
+  R.setTrailStyle('ghost');
+  R._trailBudget = 999;
+  const b2 = mkBall(160);
+  R.drawTrail(cg, b2, R.tex, 26);
+  cg.save(); cg.translate(90 + 6 * 78, 160); drawBallScaled(cg, 'classic', 26, 0.3); cg.restore();
+  cg.fillStyle = '#444'; cg.font = '13px "Segoe UI"';
+  cg.fillText('火焰（默认）', 8, 26);
+  cg.fillText('残影（原版）', 8, 128);
+
+  window.__fxPreviewReady = true;
+})();
+</script>
+</body>
+</html>

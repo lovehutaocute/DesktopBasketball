@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>真实尺寸火焰拖尾</title>
+<style>
+  html,body{margin:0;background:#e8ecf2;font:12px "Segoe UI",sans-serif;color:#333}
+  .card{background:#fff;border:1px solid #d6dce6;border-radius:8px;padding:8px;margin:8px}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<div class="card"><div class="cap">真实尺寸 r=30 · 1:1（球径 60px）四种速度对照：8 / 20 / 40 / 70 px/步</div><canvas id="a" width="900" height="560"></canvas></div>
+<div class="card"><div class="cap">同一批 · 3x 放大</div><canvas id="b" width="900" height="560"></canvas></div>
+
+<div id="host" style="position:absolute;left:-4000px;top:0;width:900px;height:520px">
+  <canvas id="stat" width="900" height="520"></canvas>
+  <canvas id="dyn" width="900" height="520"></canvas>
+</div>
+
+<script src="../src/renderer/render.js"></script>
+<script>
+(function () {
+  const R = new PB.Renderer(document.getElementById('dyn'), document.getElementById('stat'));
+  R.resize(900, 520, 1);
+
+  const SPEEDS = [8, 20, 40, 70];
+  const R_STEP = 30;                 // 与生产一致（b.r = 30）
+  /**
+   * 直接驱动真实的 `R.updateTrail()` 来攒历史点 —— 不要在这里手搓点。
+   * 手搓过一个版本（点距 = |v|），结果把"高速时拖尾断成白斑"的 bug 当成正常现象
+   * 画进了对照图。要验的就必须是生产路径本身。
+   */
+  function build(sp, y, ox) {
+    const b = { r: R_STEP, skin: null,
+      body: { position: { x: ox, y: y }, velocity: { x: sp, y: 0 }, angle: 0.5, isSleeping: false },
+      _trail: [] };
+    // 模拟 40 步：每步 position += v，然后调 updateTrail。最后把结果整体挪回画面内
+    // （球会飞出画布 —— 拖尾相对球的位置才是有意义的，所以平移回来）。
+    for (let i = 0; i < 40; i++) {
+      b.body.position.x += sp;
+      R.updateTrail(b);
+    }
+    const shift = 760 - b.body.position.x;
+    b.body.position.x += shift;
+    for (const q of b._trail) q.x += shift;
+    return b;
+  }
+
+  function render(cv, zoom) {
+    const g = cv.getContext('2d');
+    // 桌面壁纸通常是浅色 → 火焰在浅色上只剩"白雾"。同时也铺一条深色带做对照，
+    // 真实观感介于两者之间（壁纸可能是深色照片）。
+    g.fillStyle = '#e8ecf2'; g.fillRect(0, 0, cv.width, cv.height);
+    g.fillStyle = '#232a36'; g.fillRect(0, cv.height * 0.52, cv.width, cv.height * 0.48);
+    g.save(); g.scale(zoom, zoom);
+    SPEEDS.forEach((sp, i) => {
+      const y = 70 + i * (zoom > 1 ? 46 : 110);
+      const ox = 200;
+      const b = build(sp, y, ox);
+      const pts2 = b._trail;
+      R.setTrail(true); R.setTrailStyle('fire'); R._trailBudget = 999;
+      R.drawTrail(g, b, R.tex, R_STEP);
+      const set = R.tex;
+      const tip = b.body.position;
+      g.drawImage(set.body || set.base, tip.x - R_STEP, y - R_STEP, R_STEP * 2, R_STEP * 2);
+      g.fillStyle = '#556';
+      const span = pts2.length ? Math.round(Math.abs(pts2[0].x - tip.x)) : 0;
+      g.fillText('v=' + sp + 'px/步  火舌跨 ' + span + 'px  ' + pts2.length + ' 点', 12, y - 46);
+    });
+    g.restore();
+  }
+  const ac = document.getElementById('a');
+  render(ac, 1);
+  // 放大版要重新造点（坐标是屏幕坐标），直接从 1x 画布放大截取更省事
+  const bc = document.getElementById('b');
+  const bg = bc.getContext('2d');
+  bg.imageSmoothingQuality = 'high';
+  bg.drawImage(ac, 380, 0, 300, 200, 0, 0, 900, 600);
+
+  window.__realReady = true;
+})();
+</script>
+</body>
+</html>

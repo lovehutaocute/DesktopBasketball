@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>火焰拖尾放大</title>
+<style>
+  html,body{margin:0;background:#20242c;font:13px "Segoe UI",sans-serif;color:#ddd}
+  .card{background:#2a2f39;border:1px solid #3a4150;border-radius:8px;padding:10px;margin:8px}
+  canvas{display:block}
+  .cap{font-size:12px;color:#9aa4b6;padding:4px 0}
+</style>
+</head>
+<body>
+<div class="card"><div class="cap">火焰拖尾 · 4x 放大（左→右：球，右为运动方向）</div><canvas id="a" width="1200" height="300"></canvas></div>
+<div class="card"><div class="cap">同一帧 · 火焰 vs 残影 4x</div><canvas id="b" width="1200" height="460"></canvas></div>
+
+<div id="host" style="position:absolute;left:-4000px;top:0;width:900px;height:520px">
+  <canvas id="stat" width="900" height="520"></canvas>
+  <canvas id="dyn" width="900" height="520"></canvas>
+</div>
+
+<script src="../src/renderer/render.js"></script>
+<script>
+(function () {
+  const R = new PB.Renderer(document.getElementById('dyn'), document.getElementById('stat'));
+  R.resize(900, 520, 1);
+
+  const Z = 4;
+  function ball(g, skin, x, y, r, ang) {
+    const set = R.texFor(skin || R.skin);
+    const d = r * 2;
+    g.save(); g.translate(x, y);
+    if (set.single) g.drawImage(set.single, -r, -r, d, d);
+    else {
+      g.drawImage(set.body || set.base, -r, -r, d, d);
+      g.save(); g.rotate(ang); g.translate(-r, -r); g.drawImage(set.seam, 0, 0, d, d); g.restore();
+      if (!set.body) g.drawImage(set.hi, -r, -r, d, d);
+    }
+    g.restore();
+  }
+  function mkBall(skin, pts, vx, vy) {
+    return { r: 18, skin: skin || null,
+      body: { position: pts[pts.length-1], velocity: { x: vx, y: vy }, angle: 0.4, isSleeping: false },
+      _trail: pts };
+  }
+
+  const ac = document.getElementById('a');
+  const ag = ac.getContext('2d');
+  ag.save(); ag.scale(Z, Z);
+  const pts = [];
+  for (let i = 0; i < 7; i++) pts.push({ x: 24 + i * 22, y: 34 });
+  R.setTrail(true); R.setTrailStyle('fire'); R._trailBudget = 999;
+  const b = mkBall('gold', pts, 880, 0);
+  R.drawTrail(ag, b, R.texFor('gold'), 18);
+  ball(ag, 'gold', pts[6].x, 34, 18, 0.4);
+  ag.restore();
+
+  const bc = document.getElementById('b');
+  const bg = bc.getContext('2d');
+  bg.fillStyle = '#20242c'; bg.fillRect(0, 0, 1200, 460);
+  bg.save(); bg.scale(Z, Z);
+  function line(y, style, skin) {
+    const p = [];
+    for (let i = 0; i < 7; i++) p.push({ x: 20 + i * 24, y: y });
+    R.setTrailStyle(style); R._trailBudget = 999;
+    const bb = mkBall(skin, p, 960, 0);
+    R.drawTrail(bg, bb, R.texFor(skin || R.skin), 18);
+    ball(bg, skin, p[6].x, y, 18, 0.4);
+  }
+  // 三行：金球火焰 / 经典球火焰 / 经典球残影
+  line(20, 'fire', 'gold');
+  line(52, 'fire', null);
+  line(84, 'ghost', null);
+  bg.restore();
+  bg.fillStyle = '#9aa4b6'; bg.font = '13px "Segoe UI"';
+  bg.fillText('金球火焰', 8, 96 + 130);
+  bg.fillText('经典球火焰', 8, 224 + 130);
+  bg.fillText('经典球残影', 8, 352 + 130);
+
+  window.__zoomReady = true;
+})();
+</script>
+</body>
+</html>

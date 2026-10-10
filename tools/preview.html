@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>纹理放大预览</title>
+<style>
+  html,body{margin:0;background:#eef1f6;font:13px/1.6 "Segoe UI","Microsoft YaHei",sans-serif;color:#222}
+  .row{display:flex;gap:16px;padding:12px;align-items:flex-start;flex-wrap:wrap}
+  canvas{background:#eef1f6;display:block}
+  .cap{font-size:12px;color:#555;padding:2px 0}
+  .card{background:#fff;border:1px solid #d8dee8;border-radius:8px;padding:8px}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="card"><div class="cap">球 · 360px 放大（3 个旋转角）</div><canvas id="balls" width="1120" height="380"></canvas></div>
+</div>
+<div class="row">
+  <div class="card"><div class="cap">真实尺寸对比 34 / 68 / 120px</div><canvas id="sizes" width="560" height="150"></canvas></div>
+  <div class="card"><div class="cap">篮球架 · 2.6x 放大</div><canvas id="hoop" width="820" height="640"></canvas></div>
+</div>
+
+<div id="host" style="position:absolute;left:-4000px;top:0;width:900px;height:520px">
+  <canvas id="stat" width="900" height="520"></canvas>
+  <canvas id="dyn" width="900" height="520"></canvas>
+</div>
+
+<script src="../src/renderer/render.js"></script>
+<script>
+(function () {
+  const R = new PB.Renderer(document.getElementById('dyn'), document.getElementById('stat'));
+
+  // ---- 1. 球：放大看纹理
+  function ballAt(g, cx, cy, r, angle, shadow) {
+    if (shadow) {
+      g.globalAlpha = 0.92;
+      g.drawImage(R.shadowTex, cx + 5 - r * 1.15, cy + 7 - r * 0.975, r * 2.30, r * 1.95);
+      g.globalAlpha = 1;
+    }
+    g.save();
+    g.translate(cx, cy);
+    g.drawImage(R.ballBase, -r, -r, r * 2, r * 2);
+    g.save(); g.rotate(angle); g.translate(-r, -r); g.drawImage(R.ballSeam, 0, 0, r * 2, r * 2); g.restore();
+    g.drawImage(R.ballHi, -r, -r, r * 2, r * 2);
+    g.restore();
+  }
+
+  const bc = document.getElementById('balls');
+  const bg = bc.getContext('2d');
+  bg.imageSmoothingQuality = 'high';
+  const angles = [0, 0.62, 1.9];
+  for (let i = 0; i < 3; i++) ballAt(bg, 190 + i * 370, 190, 165, angles[i], true);
+
+  const sc = document.getElementById('sizes');
+  const sg = sc.getContext('2d');
+  sg.imageSmoothingQuality = 'high';
+  [34, 68, 120].forEach((r, i) => ballAt(sg, 90 + i * 185, 72, r, 0.35, true));
+
+  // ---- 2. 篮球架：按 physics.js 的几何公式，在 900x520 的画布上重建
+  const w = 900, h = 520;
+  const tube = 7, openW = 102, span = openW + tube * 2;
+  const boardW = 120, boardH = 94;
+  const boardRight = w - 24;
+  const boardLeft = boardRight - boardW;
+  const rimY = Math.max(180, h - 322);
+  const boardY = rimY + 10 - boardH / 2;
+  const cx = boardLeft + 4 - span / 2;
+  const hoop = {
+    enabled: true, cx, rimY, openW, span, tube,
+    boardX: boardLeft + boardW / 2, boardY, boardW, boardH, boardLeft,
+    boardRight: boardLeft + boardW, netLen: 82, netT: 0, netAnim: 0, flash: 0,
+  };
+
+  R.resize(w, h, 1);
+  R.drawHoopStatic(hoop);
+  const dg = R.dctx;
+  dg.clearRect(0, 0, w, h);
+  R.drawNet(dg, hoop, 0, 0);
+  R.drawRimFront(dg, hoop);
+  R.drawBall(dg, { r: 34, body: { position: { x: cx, y: rimY - 70 }, angle: 0.4, velocity: { x: 0, y: 0 } } }, R);
+  R.drawBall(dg, { r: 34, body: { position: { x: cx - 30, y: rimY - 200 }, angle: 1.1, velocity: { x: 0, y: 0 } } }, R);
+
+  const comb = document.createElement('canvas');
+  comb.width = w; comb.height = h;
+  const cg = comb.getContext('2d');
+  cg.drawImage(R.stat, 0, 0);
+  cg.drawImage(R.dyn, 0, 0);
+
+  const hc = document.getElementById('hoop');
+  const hg = hc.getContext('2d');
+  hg.imageSmoothingQuality = 'high';
+  // 裁出篮球架区域后放大
+  const sx = cx - span / 2 - 60, sy = boardY - boardH / 2 - 40;
+  const sw = (boardRight + 40) - sx, sh = (rimY + hoop.netLen + 50) - sy;
+  hg.drawImage(comb, sx, sy, sw, sh, 0, 0, hc.width, hc.height);
+
+  window.__previewReady = true;
+})();
+</script>
+</body>
+</html>

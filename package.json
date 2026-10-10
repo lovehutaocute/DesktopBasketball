@@ -1,0 +1,29 @@
+{
+  "name": "desktop-basketball",
+  "productName": "DesktopBasketball",
+  "version": "1.0.0",
+  "description": "Windows 桌面物理篮球 — 透明覆盖层 + Matter.js 物理 + 触控投掷",
+  "main": "src/main.js",
+  "author": "DesktopBasketball",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "start:nogpu": "electron . --no-gpu",
+    "bench": "node tools/bench.js",
+    "genicon": "node tools/genicon.js",
+    "pack": "node build/pack.js",
+    "pack:zip": "node build/pack.js --zip",
+    "perf": "electron . --no-gpu --cpu-test=20,20,20",
+    "perf:50": "electron . --no-gpu --cpu-test=50,20,12",
+    "dragtest": "electron . --no-gpu --drag-test=60",
+    "pack:7z": "node build/pack.js --7z"
+  },
+  "dependencies": {
+    "koffi": "^3.3.2",
+    "matter-js": "^0.20.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^38.0.0"
+  }
+}

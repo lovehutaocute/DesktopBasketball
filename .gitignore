@@ -1,0 +1,16 @@
+# 依赖
+node_modules/
+
+# 打包产物（免安装版 / 安装包 / 7z 绿色版）
+dist/
+
+# 本机运行残留
+.last-verify-dir
+
+# Python 缓存（tools 下的诊断脚本）
+__pycache__/
+*.pyc
+
+# 系统
+Thumbs.db
+Desktop.ini

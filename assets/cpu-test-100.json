@@ -1,0 +1,451 @@
+{
+  "at": "2026-10-05T13:32:11.899Z",
+  "electron": "38.8.6",
+  "chrome": "140.0.7339.249",
+  "forceNoGpu": true,
+  "softwareCompositing": true,
+  "ballCount": 100,
+  "logicalCores": 6,
+  "cpuModel": "Intel(R) Core(TM) i5-8500 CPU @ 3.00GHz",
+  "screen": {
+    "x": 0,
+    "y": 0,
+    "width": 1440,
+    "height": 852
+  },
+  "warmSec": 8,
+  "settleSec": 6,
+  "activeSec": 16,
+  "idleSec": 8,
+  "active": {
+    "samples": 16,
+    "avgCorePct": 27.41,
+    "maxCorePct": 28.93,
+    "avgMachinePct": 4.57,
+    "byType": {
+      "Browser": 10.38,
+      "Utility": 0,
+      "Tab": 17.02
+    },
+    "avgWakeups": 0
+  },
+  "settle": {
+    "samples": 6,
+    "avgCorePct": 19.72,
+    "maxCorePct": 27.29,
+    "avgMachinePct": 3.29,
+    "byType": {
+      "Browser": 7.98,
+      "Utility": 0,
+      "Tab": 11.74
+    },
+    "avgWakeups": 0
+  },
+  "idle": {
+    "samples": 10,
+    "avgCorePct": 0.12,
+    "maxCorePct": 0.73,
+    "avgMachinePct": 0.02,
+    "byType": {
+      "Browser": 0.03,
+      "Utility": 0,
+      "Tab": 0.09
+    },
+    "avgWakeups": 0
+  },
+  "wakeLatency": {
+    "idle": true,
+    "samples": 5,
+    "avgMs": 0.3,
+    "maxMs": 0.4,
+    "p50Ms": 0.3
+  },
+  "rendererActive": "{\"w\":1440,\"h\":852,\"dpr\":1,\"balls\":100,\"pos\":[[585,339,0,31,-169],[64,294,0,-99,-490],[265,71,0,255,105],[397,435,0,467,-370],[390,173,0,428,106],[731,144,0,-127,-369],[1001,195,0,-159,-61],[350,314,0,167,-396],[176,210,0,73,-315],[1343,40,0,-139,-18],[787,330,0,-110,96],[1304,96,0,-93,175],[985,61,0,-275,-340],[1338,321,0,310,-89],[1359,231,0,353,-28],[1216,348,0,157,-369],[882,344,0,-398,-347],[1224,281,0,43,-540],[611,38,0,185,108],[279,139,0,88,-196],[1029,434,0,-66,-563],[102,110,0,233,334],[161,78,0,-215,-498],[112,36,0,-2,-152],[967,315,0,-44,-219],[1339,155,0,-228,34],[1276,34,0,50,193],[36,222,0,-51,-42],[398,105,0,39,-17],[108,363,0,-87,-302],[677,104,0,-394,-540],[319,30,0,367,-302],[236,262,0,-2,-94],[1389,105,0,-136,-203],[560,200,0,140,110],[540,126,0,-117,2],[260,435,0,189,-8],[1153,289,0,287,-717],[710,210,0,335,-533],[763,399,0,471,-360],[335,523,0,-93,-755],[1357,390,0,25,19],[1043,518,0,-343,-121],[498,28,0,-184,25],[644,252,0,246,-512],[470,111,0,226,93],[191,317,0,-171,-42],[114,249,0,-137,-500],[678,38,0,374,95],[838,236,0,-253,-488]],\"fps\":44,\"loopHz\":44,\"stepHz\":60,\"physMs\":0.39,\"physMaxMs\":5.2,\"drawMs\":1,\"tiles\":84,\"tilesTotal\":84,\"drawCalls\":200,\"mip\":\"68/89\",\"pairs\":39,\"hoop\":true,\"score\":30,\"highScore\":30,\"combo\":6,\"skin\":\"watermelon\",\"texCache\":2,\"achievements\":7,\"achievementList\":[\"record\",\"first\",\"swish\",\"carom\",\"combo3\",\"score10\",\"combo5\"],\"goldenBalls\":0,\"hud\":null,\"idle\":false,\"wakeLatMs\":12.3,\"menuOpen\":false,\"menu\":null,\"dragging\":false,\"dragTarget\":null,\"draggedBall\":null,\"scheduled\":\"step\",\"shapeLocked\":false,\"bars\":[],\"draws\":1029,\"drawMsTotal\":775.4,\"drawMsAvg\":0.754,\"loops\":7,\"steps\":9,\"frameCapMs\":14.29,\"hoops\":{\"cx\":1233,\"rimY\":530,\"on\":true},\"hoopRects\":[[1284,442,128,100],[1168,507,130,46],[1178,530,110,131],[1384,366,56,486]]}",
+  "rendererIdle": "{\"w\":1440,\"h\":852,\"dpr\":1,\"balls\":100,\"pos\":[[689,819,1,0,0],[34,685,1,0,0],[353,702,1,0,0],[555,819,1,0,0],[454,761,1,0,0],[756,585,1,0,0],[991,761,1,0,0],[353,819,1,0,0],[184,760,1,0,0],[1143,508,1,0,0],[756,819,1,0,0],[1018,503,1,0,0],[962,541,1,0,0],[1272,684,1,0,0],[1218,642,1,0,0],[1406,684,1,0,0],[823,819,1,0,0],[1373,625,1,0,0],[621,585,1,0,0],[387,761,1,0,0],[1058,761,1,0,0],[153,699,1,0,0],[185,639,1,0,0],[222,583,1,0,0],[957,819,1,0,0],[1082,538,1,0,0],[1023,570,1,0,0],[34,617,1,0,0],[420,702,1,0,0],[33,753,1,0,0],[655,644,1,0,0],[320,644,1,0,0],[252,760,1,0,0],[1306,626,1,0,0],[689,702,1,0,0],[588,761,1,0,0],[151,818,1,0,0],[1339,752,1,0,0],[789,644,1,0,0],[1208,819,1,0,0],[487,819,1,0,0],[1316,411,1,0,0],[1340,819,1,0,0],[588,644,1,0,0],[756,702,1,0,0],[454,644,1,0,0],[218,818,1,0,0],[92,787,1,0,0],[689,585,1,0,0],[790,761,1,0,0]],\"fps\":0,\"loopHz\":6,\"stepHz\":0,\"physMs\":0.11,\"physMaxMs\":0,\"drawMs\":0,\"tiles\":0,\"tilesTotal\":84,\"drawCalls\":0,\"mip\":\"68/89\",\"pairs\":240,\"hoop\":true,\"score\":47,\"highScore\":47,\"combo\":13,\"skin\":\"watermelon\",\"texCache\":2,\"achievements\":7,\"achievementList\":[\"record\",\"first\",\"swish\",\"carom\",\"combo3\",\"score10\",\"combo5\"],\"goldenBalls\":0,\"hud\":null,\"idle\":true,\"wakeLatMs\":12.3,\"menuOpen\":false,\"menu\":null,\"dragging\":false,\"dragTarget\":null,\"draggedBall\":null,\"scheduled\":\"timer\",\"shapeLocked\":false,\"bars\":[],\"draws\":1268,\"drawMsTotal\":943.3,\"drawMsAvg\":0.744,\"loops\":1,\"steps\":0,\"frameCapMs\":14.29,\"hoops\":{\"cx\":1233,\"rimY\":530,\"on\":true},\"hoopRects\":[[1284,442,128,100],[1168,507,130,46],[1178,530,110,131],[1384,366,56,486]]}",
+  "samples": [
+    {
+      "t": 9,
+      "phase": "active",
+      "total": 27.61,
+      "by": {
+        "Browser": 10.68,
+        "Utility": 0,
+        "Tab": 16.92
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 10,
+      "phase": "active",
+      "total": 27.04,
+      "by": {
+        "Browser": 10,
+        "Utility": 0,
+        "Tab": 17.04
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 11,
+      "phase": "active",
+      "total": 27.19,
+      "by": {
+        "Browser": 10.07,
+        "Utility": 0.04,
+        "Tab": 17.08
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 12,
+      "phase": "active",
+      "total": 27.42,
+      "by": {
+        "Browser": 10.37,
+        "Utility": 0,
+        "Tab": 17.05
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 13,
+      "phase": "active",
+      "total": 26.91,
+      "by": {
+        "Browser": 10.08,
+        "Utility": 0,
+        "Tab": 16.84
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 14,
+      "phase": "active",
+      "total": 27.1,
+      "by": {
+        "Browser": 10.01,
+        "Utility": 0,
+        "Tab": 17.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 15,
+      "phase": "active",
+      "total": 26.92,
+      "by": {
+        "Browser": 9.94,
+        "Utility": 0,
+        "Tab": 16.98
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 16,
+      "phase": "active",
+      "total": 26.88,
+      "by": {
+        "Browser": 9.79,
+        "Utility": 0,
+        "Tab": 17.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 17,
+      "phase": "active",
+      "total": 27.48,
+      "by": {
+        "Browser": 10.39,
+        "Utility": 0,
+        "Tab": 17.1
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 18,
+      "phase": "active",
+      "total": 28.08,
+      "by": {
+        "Browser": 10.88,
+        "Utility": 0,
+        "Tab": 17.2
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 19,
+      "phase": "active",
+      "total": 28.93,
+      "by": {
+        "Browser": 11.81,
+        "Utility": 0,
+        "Tab": 17.12
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 20,
+      "phase": "active",
+      "total": 27.08,
+      "by": {
+        "Browser": 10.1,
+        "Utility": 0,
+        "Tab": 16.98
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 21,
+      "phase": "active",
+      "total": 27.75,
+      "by": {
+        "Browser": 10.72,
+        "Utility": 0,
+        "Tab": 17.03
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 22,
+      "phase": "active",
+      "total": 27.24,
+      "by": {
+        "Browser": 10.42,
+        "Utility": 0,
+        "Tab": 16.82
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 23,
+      "phase": "active",
+      "total": 27.69,
+      "by": {
+        "Browser": 10.66,
+        "Utility": 0,
+        "Tab": 17.03
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 24,
+      "phase": "active",
+      "total": 27.17,
+      "by": {
+        "Browser": 10.18,
+        "Utility": 0,
+        "Tab": 16.99
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 25,
+      "phase": "settle",
+      "total": 27.29,
+      "by": {
+        "Browser": 10.51,
+        "Utility": 0,
+        "Tab": 16.78
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 26,
+      "phase": "settle",
+      "total": 26.93,
+      "by": {
+        "Browser": 9.84,
+        "Utility": 0,
+        "Tab": 17.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 27,
+      "phase": "settle",
+      "total": 25.54,
+      "by": {
+        "Browser": 8.28,
+        "Utility": 0,
+        "Tab": 17.27
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 28,
+      "phase": "settle",
+      "total": 25.53,
+      "by": {
+        "Browser": 9.93,
+        "Utility": 0,
+        "Tab": 15.6
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 29,
+      "phase": "settle",
+      "total": 12.61,
+      "by": {
+        "Browser": 9.03,
+        "Utility": 0,
+        "Tab": 3.57
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 30,
+      "phase": "settle",
+      "total": 0.4,
+      "by": {
+        "Browser": 0.26,
+        "Utility": 0,
+        "Tab": 0.14
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 31,
+      "phase": "idle",
+      "total": 0.04,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 32,
+      "phase": "idle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.01,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 33,
+      "phase": "idle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.01,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 34,
+      "phase": "idle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.01,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 35,
+      "phase": "idle",
+      "total": 0.04,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 36,
+      "phase": "idle",
+      "total": 0.04,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 37,
+      "phase": "idle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 38,
+      "phase": "idle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 39,
+      "phase": "idle",
+      "total": 0.73,
+      "by": {
+        "Browser": 0.07,
+        "Utility": 0,
+        "Tab": 0.66
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 40,
+      "phase": "idle",
+      "total": 0.16,
+      "by": {
+        "Browser": 0.06,
+        "Utility": 0,
+        "Tab": 0.1
+      },
+      "procs": 3,
+      "wakeups": 0
+    }
+  ]
+}

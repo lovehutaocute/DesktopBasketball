@@ -1,0 +1,322 @@
+[
+  {
+    "full_name": "Felix-au/DeskX-Wallpaper-Engine",
+    "stars": 93,
+    "lang": "JavaScript",
+    "license": "MIT",
+    "pushed": "2026-07-28",
+    "desc": "A lightweight wallpaper engine and interactive widget utility built with Electron. Injects dynamic wallpapers (videos, G",
+    "url": "https://github.com/Felix-au/DeskX-Wallpaper-Engine",
+    "query": "wallpaper engine WorkerW desktop layer"
+  },
+  {
+    "full_name": "jabbany/ShimejiHTML5",
+    "stars": 14,
+    "lang": "JavaScript",
+    "license": "MIT",
+    "pushed": "2014-11-08",
+    "desc": "The worlds most useless port of a desktop (webpage) mascot",
+    "url": "https://github.com/jabbany/ShimejiHTML5",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "ngoc-thu/shimeji",
+    "stars": 5,
+    "lang": "Java",
+    "license": "Zlib",
+    "pushed": "2026-08-08",
+    "desc": "A Shimeji desktop mascot project adapted for Windows 10/11",
+    "url": "https://github.com/ngoc-thu/shimeji",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "Stuocs/Clover_Shimeji",
+    "stars": 5,
+    "lang": "Python",
+    "license": "MIT",
+    "pushed": "2025-10-11",
+    "desc": "Clover Desktop Pet (also known as Clover Shimeji) is an interactive desktop companion featuring Clover from Undertale Ye",
+    "url": "https://github.com/Stuocs/Clover_Shimeji",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "spyderweb47/Desktop-Virtual-buddy",
+    "stars": 5,
+    "lang": "TypeScript",
+    "license": "MIT",
+    "pushed": "2026-04-10",
+    "desc": "AI-powered desktop mascot with Shimeji behaviors, wall/ceiling climbing, window-platform detection, and a detachable LLM",
+    "url": "https://github.com/spyderweb47/Desktop-Virtual-buddy",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "beetrandahiya/Projectile-Motion-Simulation",
+    "stars": 5,
+    "lang": "JavaScript",
+    "license": "MIT",
+    "pushed": "2023-05-03",
+    "desc": "A simple projectile motion simulator made made using matter.js , it looks cool and ofc gonna help you see physically acc",
+    "url": "https://github.com/beetrandahiya/Projectile-Motion-Simulation",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "ngoc-thu/shimeji-ubuntu",
+    "stars": 4,
+    "lang": "Java",
+    "license": "Zlib",
+    "pushed": "2026-08-10",
+    "desc": "Desktop mascot project for Ubuntu with Settings GUI, character switching, and self-cloning control.",
+    "url": "https://github.com/ngoc-thu/shimeji-ubuntu",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "kyzmapiratov/Menagerie",
+    "stars": 4,
+    "lang": "Rust",
+    "license": "GPL-2.0",
+    "pushed": "2026-09-21",
+    "desc": "Beautiful desktop pets & Shimeji mascots for Linux / Wayland. Browse thousands of characters, one-click install, scene p",
+    "url": "https://github.com/kyzmapiratov/Menagerie",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "whitehatjr/bouncyBall",
+    "stars": 4,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2019-08-18",
+    "desc": "Bouncy Ball created using matter.js physics engine",
+    "url": "https://github.com/whitehatjr/bouncyBall",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "gongtr188-commits/ai-generated-phoebe-desktop-pet",
+    "stars": 3,
+    "lang": "Python",
+    "license": "NONE",
+    "pushed": "2026-08-16",
+    "desc": "Wuthering Waves Phoebe desktop pet — frameless transparent PyQt5 companion with roaming, mouse-following, window-loungin",
+    "url": "https://github.com/gongtr188-commits/ai-generated-phoebe-desktop-pet",
+    "query": "desktop pet physics transparent window"
+  },
+  {
+    "full_name": "welltilln/desksprite",
+    "stars": 3,
+    "lang": "JavaScript",
+    "license": "MIT",
+    "pushed": "2026-07-03",
+    "desc": "A zero-dependency JavaScript desktop pet / web mascot widget — grab, throw & seat a pixel character on your page. A vani",
+    "url": "https://github.com/welltilln/desksprite",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "exoteric33/aipets",
+    "stars": 3,
+    "lang": "C#",
+    "license": "MIT",
+    "pushed": "2026-09-27",
+    "desc": "Pixel-art desktop pets for Windows - one per AI agent (Claude Code, Codex, Cursor, Copilot, Gemini, Grok, Hermes). Click",
+    "url": "https://github.com/exoteric33/aipets",
+    "query": "shimeji desktop mascot"
+  },
+  {
+    "full_name": "themrbads/Maze-Game",
+    "stars": 2,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2024-01-05",
+    "desc": "Guide a ball through a square maze using Matter.js physics for a simple yet engaging game.",
+    "url": "https://github.com/themrbads/Maze-Game",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "jin3107/clawd-pet",
+    "stars": 2,
+    "lang": "HTML",
+    "license": "MIT",
+    "pushed": "2026-09-26",
+    "desc": "A pixel-art desktop pet (inspired by Claude's mascot Clawd) that roams your taskbar autonomously Electron + transparent ",
+    "url": "https://github.com/jin3107/clawd-pet",
+    "query": "desktop mascot electron transparent always on top"
+  },
+  {
+    "full_name": "Braeden90000/desktop-monkeys",
+    "stars": 1,
+    "lang": "Python",
+    "license": "NONE",
+    "pushed": "2026-07-26",
+    "desc": "Six tech guys crawl around your Windows desktop like monkeys - transparent desktop pets with physics and window interact",
+    "url": "https://github.com/Braeden90000/desktop-monkeys",
+    "query": "desktop pet physics transparent window"
+  },
+  {
+    "full_name": "rroojrooj/Open-Birdie",
+    "stars": 1,
+    "lang": "JavaScript",
+    "license": "MIT",
+    "pushed": "2026-07-28",
+    "desc": "Open-data golf simulator: real OpenStreetMap courses + terrain elevation, driven by any GSPro Open Connect launch monito",
+    "url": "https://github.com/rroojrooj/Open-Birdie",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "antiBaconMachine/JihadronCollider",
+    "stars": 1,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2012-07-02",
+    "desc": "Billiard ball physics engine and associated experimental desktop metaphor. The idea is to be able to create natural grou",
+    "url": "https://github.com/antiBaconMachine/JihadronCollider",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "Shivani2006/physicsEngiene",
+    "stars": 1,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2020-02-24",
+    "desc": "made ground and ball using physics engiene matter.js",
+    "url": "https://github.com/Shivani2006/physicsEngiene",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "bryanloo-dev/Pool-game-web-application",
+    "stars": 1,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2025-10-21",
+    "desc": "A p5.js and Matter.js-based 2D billiards simulation featuring real-time physics, collision detection, scoring, and inter",
+    "url": "https://github.com/bryanloo-dev/Pool-game-web-application",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "JustLachin/ring-escape",
+    "stars": 1,
+    "lang": "HTML",
+    "license": "NONE",
+    "pushed": "2026-03-21",
+    "desc": "A satisfying physics simulation where a glowing ball breaks free from concentric rings. Inspired by viral TikTok and Ins",
+    "url": "https://github.com/JustLachin/ring-escape",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "miloscomplex/ricochet",
+    "stars": 1,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2021-08-02",
+    "desc": "Ricochet is a simple javascript game that implements physics and challenges the user to get the ball to cross the goalpo",
+    "url": "https://github.com/miloscomplex/ricochet",
+    "query": "matter.js physics ball"
+  },
+  {
+    "full_name": "Simon77Xx/Music-Converter",
+    "stars": 1,
+    "lang": "TypeScript",
+    "license": "NONE",
+    "pushed": "2026-04-03",
+    "desc": "Softcreate is a lightweight desktop application for Windows and macOS, built with Electron. Its main interface is a smal",
+    "url": "https://github.com/Simon77Xx/Music-Converter",
+    "query": "desktop mascot electron transparent always on top"
+  },
+  {
+    "full_name": "Me-in-U/Live-Captions-Rain",
+    "stars": 1,
+    "lang": "C#",
+    "license": "Apache-2.0",
+    "pushed": "2026-05-22",
+    "desc": "A Windows desktop app that turns Windows Live Captions into a physics-based word rain overlay.",
+    "url": "https://github.com/Me-in-U/Live-Captions-Rain",
+    "query": "box2d windows desktop overlay physics"
+  },
+  {
+    "full_name": "Rohits1402/deskcat",
+    "stars": 0,
+    "lang": "Java",
+    "license": "NONE",
+    "pushed": "2026-07-30",
+    "desc": "A pixel desktop pet for Windows, in Java and libGDX. Transparent always-on-top window, cursor tracking, physics-based dr",
+    "url": "https://github.com/Rohits1402/deskcat",
+    "query": "desktop pet physics transparent window"
+  },
+  {
+    "full_name": "gonida1010/AI_Desktop_Pet_Project",
+    "stars": 0,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2025-12-07",
+    "desc": "An interactive AI desktop pet built with React, Electron, and FastAPI that features autonomous behavior and physics-base",
+    "url": "https://github.com/gonida1010/AI_Desktop_Pet_Project",
+    "query": "desktop pet physics transparent window"
+  },
+  {
+    "full_name": "aylinaktas0705-hub/desktop-physics-toy",
+    "stars": 0,
+    "lang": "Java",
+    "license": "NONE",
+    "pushed": "2026-09-03",
+    "desc": "A red ball you can drag and throw around your desktop.",
+    "url": "https://github.com/aylinaktas0705-hub/desktop-physics-toy",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "moe091/Ball",
+    "stars": 0,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2017-11-05",
+    "desc": "HTML5 Physics based platformer for desktop and mobile browsers. Control a ball by spinning, jumping, and bouncing around",
+    "url": "https://github.com/moe091/Ball",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "tailogs/ball",
+    "stars": 0,
+    "lang": "C",
+    "license": "MIT",
+    "pushed": "2026-04-25",
+    "desc": "Bouncing Ball – A lightweight Windows desktop toy: a colorful, physics‑based ball that bounces around the screen with so",
+    "url": "https://github.com/tailogs/ball",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "xtreemze/Ballistic",
+    "stars": 0,
+    "lang": "JavaScript",
+    "license": "AGPL-3.0",
+    "pushed": "2018-02-05",
+    "desc": "1st Person 3D Physics Shooter built for Desktop and Mobile",
+    "url": "https://github.com/xtreemze/Ballistic",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "AntonBronnfjell/project-opengl-desktop-python_ball-colider",
+    "stars": 0,
+    "lang": "Python",
+    "license": "NONE",
+    "pushed": "2025-10-14",
+    "desc": "Python OpenGL application for ball collision physics simulation. Professional graphics programming with real-time physic",
+    "url": "https://github.com/AntonBronnfjell/project-opengl-desktop-python_ball-colider",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "youssefekrami919/Physics-Engine-Ball-Simulation",
+    "stars": 0,
+    "lang": "C#",
+    "license": "NONE",
+    "pushed": "2025-09-11",
+    "desc": "A simple physics engine built with C# that simulates ball movement along the X and Y axes. The motion is affected by spe",
+    "url": "https://github.com/youssefekrami919/Physics-Engine-Ball-Simulation",
+    "query": "desktop ball physics"
+  },
+  {
+    "full_name": "r673/ball-and-physics",
+    "stars": 0,
+    "lang": "JavaScript",
+    "license": "NONE",
+    "pushed": "2020-04-27",
+    "desc": "use matter.js",
+    "url": "https://github.com/r673/ball-and-physics",
+    "query": "matter.js physics ball"
+  }
+]

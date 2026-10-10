@@ -1,0 +1,898 @@
+{
+  "at": "2026-10-03T07:41:22.911Z",
+  "electron": "38.8.6",
+  "forceNoGpu": true,
+  "ballCount": 60,
+  "logicalCores": 6,
+  "cpuModel": "Intel(R) Core(TM) i5-8500 CPU @ 3.00GHz",
+  "screen": {
+    "x": 0,
+    "y": 0,
+    "width": 1440,
+    "height": 852
+  },
+  "holdSec": 4,
+  "dragSec": 8,
+  "afterSec": 4,
+  "settleSec": 9,
+  "phases": [
+    {
+      "phase": "settle",
+      "sec": 9,
+      "capMs": 14.29,
+      "cpu": {
+        "samples": 9,
+        "avgCorePct": 0.22,
+        "maxCorePct": 1.7,
+        "avgMachinePct": 0.04,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 0.21,
+          "Utility": 0,
+          "Tab": 0.01
+        }
+      },
+      "drawsPerSec": 0,
+      "itersPerSec": 6,
+      "loopMsPerSec": 0,
+      "loopMsAvg": 0.006,
+      "drawMsAvg": 0,
+      "physMs": 0.15,
+      "physMaxMs": 0,
+      "tiles": 4,
+      "pairs": 133,
+      "awake": 0,
+      "balls": 60
+    },
+    {
+      "phase": "probe-raf",
+      "sec": 5,
+      "capMs": 14.29,
+      "cpu": {
+        "samples": 5,
+        "avgCorePct": 0.52,
+        "maxCorePct": 0.57,
+        "avgMachinePct": 0.09,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 0.17,
+          "Utility": 0,
+          "Tab": 0.35
+        }
+      },
+      "drawsPerSec": 0,
+      "itersPerSec": 6,
+      "loopMsPerSec": 0,
+      "loopMsAvg": 0.003,
+      "drawMsAvg": 0,
+      "physMs": 0.15,
+      "physMaxMs": 0,
+      "tiles": 4,
+      "pairs": 133,
+      "awake": 0,
+      "balls": 60
+    },
+    {
+      "phase": "probe-rafdraw",
+      "sec": 6.2,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 6,
+        "avgCorePct": 0.51,
+        "maxCorePct": 0.62,
+        "avgMachinePct": 0.08,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 0.17,
+          "Utility": 0,
+          "Tab": 0.34
+        }
+      },
+      "drawsPerSec": 54,
+      "itersPerSec": 6,
+      "loopMsPerSec": 0,
+      "loopMsAvg": 0.003,
+      "drawMsAvg": 0.01,
+      "physMs": 0.15,
+      "physMaxMs": 0,
+      "tiles": 0,
+      "pairs": 133,
+      "awake": 0,
+      "balls": 60
+    },
+    {
+      "phase": "corridor-hold",
+      "sec": 4,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 4,
+        "avgCorePct": 3.43,
+        "maxCorePct": 4.02,
+        "avgMachinePct": 0.57,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 0.63,
+          "Utility": 0,
+          "Tab": 2.79
+        }
+      },
+      "drawsPerSec": 47,
+      "itersPerSec": 72,
+      "loopMsPerSec": 8.2,
+      "loopMsAvg": 0.114,
+      "drawMsAvg": 0.14,
+      "physMs": 0.08,
+      "physMaxMs": 0.3,
+      "tiles": 2,
+      "pairs": 133,
+      "awake": 1,
+      "balls": 60
+    },
+    {
+      "phase": "corridor-drag",
+      "sec": 8,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 8,
+        "avgCorePct": 19.77,
+        "maxCorePct": 21.71,
+        "avgMachinePct": 3.3,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 4.03,
+          "Utility": 0,
+          "Tab": 15.74
+        }
+      },
+      "drawsPerSec": 41,
+      "itersPerSec": 42,
+      "loopMsPerSec": 33.2,
+      "loopMsAvg": 0.792,
+      "drawMsAvg": 1.019,
+      "physMs": 0.39,
+      "physMaxMs": 1.7,
+      "tiles": 18,
+      "pairs": 120,
+      "awake": 24,
+      "balls": 60
+    },
+    {
+      "phase": "corridor-after",
+      "sec": 4,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 4,
+        "avgCorePct": 17.08,
+        "maxCorePct": 22.3,
+        "avgMachinePct": 2.85,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 4.44,
+          "Utility": 0,
+          "Tab": 12.64
+        }
+      },
+      "drawsPerSec": 48,
+      "itersPerSec": 60,
+      "loopMsPerSec": 24.1,
+      "loopMsAvg": 0.402,
+      "drawMsAvg": 0.533,
+      "physMs": 0.19,
+      "physMaxMs": 1.7,
+      "tiles": 6,
+      "pairs": 141,
+      "awake": 3,
+      "balls": 60
+    },
+    {
+      "phase": "full-hold",
+      "sec": 4,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 4,
+        "avgCorePct": 5.07,
+        "maxCorePct": 7.26,
+        "avgMachinePct": 0.85,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 1.07,
+          "Utility": 0,
+          "Tab": 4.01
+        }
+      },
+      "drawsPerSec": 46,
+      "itersPerSec": 75,
+      "loopMsPerSec": 7,
+      "loopMsAvg": 0.093,
+      "drawMsAvg": 0.183,
+      "physMs": 0.11,
+      "physMaxMs": 1.7,
+      "tiles": 4,
+      "pairs": 140,
+      "awake": 2,
+      "balls": 60
+    },
+    {
+      "phase": "full-drag",
+      "sec": 8,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 8,
+        "avgCorePct": 16.69,
+        "maxCorePct": 18.32,
+        "avgMachinePct": 2.78,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 1.27,
+          "Utility": 0,
+          "Tab": 15.42
+        }
+      },
+      "drawsPerSec": 44,
+      "itersPerSec": 46,
+      "loopMsPerSec": 25.7,
+      "loopMsAvg": 0.556,
+      "drawMsAvg": 0.921,
+      "physMs": 0.48,
+      "physMaxMs": 1.7,
+      "tiles": 23,
+      "pairs": 135,
+      "awake": 45,
+      "balls": 60
+    },
+    {
+      "phase": "full-after",
+      "sec": 4.1,
+      "capMs": 16.13,
+      "cpu": {
+        "samples": 4,
+        "avgCorePct": 15.48,
+        "maxCorePct": 19.84,
+        "avgMachinePct": 2.58,
+        "wakeups": 0,
+        "byType": {
+          "Browser": 3.44,
+          "Utility": 0,
+          "Tab": 12.04
+        }
+      },
+      "drawsPerSec": 33,
+      "itersPerSec": 43,
+      "loopMsPerSec": 19.5,
+      "loopMsAvg": 0.449,
+      "drawMsAvg": 0.692,
+      "physMs": 0.23,
+      "physMaxMs": 0,
+      "tiles": 8,
+      "pairs": 145,
+      "awake": 0,
+      "balls": 60
+    }
+  ],
+  "samples": [
+    {
+      "t": 7,
+      "phase": "settle",
+      "total": 0.05,
+      "by": {
+        "Browser": 0.03,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 8,
+      "phase": "settle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 9,
+      "phase": "settle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 10,
+      "phase": "settle",
+      "total": 0.1,
+      "by": {
+        "Browser": 0.08,
+        "Utility": 0,
+        "Tab": 0.02
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 11,
+      "phase": "settle",
+      "total": 1.7,
+      "by": {
+        "Browser": 1.69,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 12,
+      "phase": "settle",
+      "total": 0.02,
+      "by": {
+        "Browser": 0.01,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 13,
+      "phase": "settle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.01,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 14,
+      "phase": "settle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 15,
+      "phase": "settle",
+      "total": 0.03,
+      "by": {
+        "Browser": 0.02,
+        "Utility": 0,
+        "Tab": 0.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 16,
+      "phase": "probe-raf",
+      "total": 0.42,
+      "by": {
+        "Browser": 0.15,
+        "Utility": 0,
+        "Tab": 0.27
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 17,
+      "phase": "probe-raf",
+      "total": 0.56,
+      "by": {
+        "Browser": 0.18,
+        "Utility": 0,
+        "Tab": 0.38
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 18,
+      "phase": "probe-raf",
+      "total": 0.57,
+      "by": {
+        "Browser": 0.19,
+        "Utility": 0,
+        "Tab": 0.38
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 19,
+      "phase": "probe-raf",
+      "total": 0.56,
+      "by": {
+        "Browser": 0.18,
+        "Utility": 0,
+        "Tab": 0.38
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 20,
+      "phase": "probe-raf",
+      "total": 0.5,
+      "by": {
+        "Browser": 0.17,
+        "Utility": 0,
+        "Tab": 0.33
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 21,
+      "phase": "probe-rafdraw",
+      "total": 0.54,
+      "by": {
+        "Browser": 0.17,
+        "Utility": 0,
+        "Tab": 0.36
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 22,
+      "phase": "probe-rafdraw",
+      "total": 0.62,
+      "by": {
+        "Browser": 0.2,
+        "Utility": 0,
+        "Tab": 0.42
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 23,
+      "phase": "probe-rafdraw",
+      "total": 0.57,
+      "by": {
+        "Browser": 0.19,
+        "Utility": 0,
+        "Tab": 0.38
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 24,
+      "phase": "probe-rafdraw",
+      "total": 0.59,
+      "by": {
+        "Browser": 0.19,
+        "Utility": 0,
+        "Tab": 0.4
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 25,
+      "phase": "probe-rafdraw",
+      "total": 0.56,
+      "by": {
+        "Browser": 0.16,
+        "Utility": 0,
+        "Tab": 0.4
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 26,
+      "phase": "probe-rafdraw",
+      "total": 0.17,
+      "by": {
+        "Browser": 0.08,
+        "Utility": 0,
+        "Tab": 0.1
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 27,
+      "phase": "corridor-hold",
+      "total": 1.94,
+      "by": {
+        "Browser": 0.48,
+        "Utility": 0,
+        "Tab": 1.46
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 28,
+      "phase": "corridor-hold",
+      "total": 4.02,
+      "by": {
+        "Browser": 0.63,
+        "Utility": 0,
+        "Tab": 3.39
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 29,
+      "phase": "corridor-hold",
+      "total": 3.97,
+      "by": {
+        "Browser": 0.73,
+        "Utility": 0,
+        "Tab": 3.24
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 30,
+      "phase": "corridor-hold",
+      "total": 3.78,
+      "by": {
+        "Browser": 0.69,
+        "Utility": 0,
+        "Tab": 3.08
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 31,
+      "phase": "corridor-drag",
+      "total": 11.19,
+      "by": {
+        "Browser": 2.45,
+        "Utility": 0,
+        "Tab": 8.74
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 32,
+      "phase": "corridor-drag",
+      "total": 21.71,
+      "by": {
+        "Browser": 4.59,
+        "Utility": 0,
+        "Tab": 17.13
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 33,
+      "phase": "corridor-drag",
+      "total": 21.25,
+      "by": {
+        "Browser": 3.99,
+        "Utility": 0,
+        "Tab": 17.25
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 34,
+      "phase": "corridor-drag",
+      "total": 21.23,
+      "by": {
+        "Browser": 4.26,
+        "Utility": 0,
+        "Tab": 16.96
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 35,
+      "phase": "corridor-drag",
+      "total": 20.89,
+      "by": {
+        "Browser": 3.91,
+        "Utility": 0,
+        "Tab": 16.98
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 36,
+      "phase": "corridor-drag",
+      "total": 21.47,
+      "by": {
+        "Browser": 4.85,
+        "Utility": 0,
+        "Tab": 16.62
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 37,
+      "phase": "corridor-drag",
+      "total": 20.64,
+      "by": {
+        "Browser": 3.73,
+        "Utility": 0,
+        "Tab": 16.91
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 38,
+      "phase": "corridor-drag",
+      "total": 19.8,
+      "by": {
+        "Browser": 4.49,
+        "Utility": 0,
+        "Tab": 15.3
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 39,
+      "phase": "corridor-after",
+      "total": 22.3,
+      "by": {
+        "Browser": 5.28,
+        "Utility": 0,
+        "Tab": 17.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 40,
+      "phase": "corridor-after",
+      "total": 21.09,
+      "by": {
+        "Browser": 4.92,
+        "Utility": 0,
+        "Tab": 16.17
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 41,
+      "phase": "corridor-after",
+      "total": 11.89,
+      "by": {
+        "Browser": 4.05,
+        "Utility": 0,
+        "Tab": 7.83
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 42,
+      "phase": "corridor-after",
+      "total": 13.05,
+      "by": {
+        "Browser": 3.52,
+        "Utility": 0,
+        "Tab": 9.53
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 43,
+      "phase": "full-hold",
+      "total": 7.26,
+      "by": {
+        "Browser": 2.03,
+        "Utility": 0,
+        "Tab": 5.23
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 44,
+      "phase": "full-hold",
+      "total": 4.54,
+      "by": {
+        "Browser": 0.82,
+        "Utility": 0,
+        "Tab": 3.72
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 45,
+      "phase": "full-hold",
+      "total": 4.13,
+      "by": {
+        "Browser": 0.71,
+        "Utility": 0,
+        "Tab": 3.42
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 46,
+      "phase": "full-hold",
+      "total": 4.36,
+      "by": {
+        "Browser": 0.71,
+        "Utility": 0,
+        "Tab": 3.65
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 47,
+      "phase": "full-drag",
+      "total": 7.7,
+      "by": {
+        "Browser": 0.88,
+        "Utility": 0,
+        "Tab": 6.83
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 48,
+      "phase": "full-drag",
+      "total": 17.01,
+      "by": {
+        "Browser": 1.27,
+        "Utility": 0,
+        "Tab": 15.74
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 49,
+      "phase": "full-drag",
+      "total": 17.44,
+      "by": {
+        "Browser": 1.35,
+        "Utility": 0,
+        "Tab": 16.09
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 50,
+      "phase": "full-drag",
+      "total": 18.23,
+      "by": {
+        "Browser": 1.3,
+        "Utility": 0,
+        "Tab": 16.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 51,
+      "phase": "full-drag",
+      "total": 18.32,
+      "by": {
+        "Browser": 1.37,
+        "Utility": 0,
+        "Tab": 16.95
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 52,
+      "phase": "full-drag",
+      "total": 18.28,
+      "by": {
+        "Browser": 1.35,
+        "Utility": 0,
+        "Tab": 16.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 53,
+      "phase": "full-drag",
+      "total": 18.22,
+      "by": {
+        "Browser": 1.28,
+        "Utility": 0,
+        "Tab": 16.94
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 54,
+      "phase": "full-drag",
+      "total": 18.31,
+      "by": {
+        "Browser": 1.39,
+        "Utility": 0,
+        "Tab": 16.93
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 55,
+      "phase": "full-after",
+      "total": 19.27,
+      "by": {
+        "Browser": 2.3,
+        "Utility": 0,
+        "Tab": 16.97
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 56,
+      "phase": "full-after",
+      "total": 19.84,
+      "by": {
+        "Browser": 5.23,
+        "Utility": 0,
+        "Tab": 14.61
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 57,
+      "phase": "full-after",
+      "total": 14.64,
+      "by": {
+        "Browser": 4.07,
+        "Utility": 0,
+        "Tab": 10.57
+      },
+      "procs": 3,
+      "wakeups": 0
+    },
+    {
+      "t": 58,
+      "phase": "full-after",
+      "total": 8.18,
+      "by": {
+        "Browser": 2.17,
+        "Utility": 0,
+        "Tab": 6.01
+      },
+      "procs": 3,
+      "wakeups": 0
+    }
+  ]
+}
