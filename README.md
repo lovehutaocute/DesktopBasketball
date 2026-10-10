@@ -6,11 +6,23 @@ Windows 桌面上的透明覆盖层 + 真实刚体物理篮球。篮球**浮于�
 
 - **技术栈**：Electron 38 + Matter.js 0.20 + koffi（Win32 FFI），全部 MIT / Apache 系宽松许可
 - **产物**：免安装绿色目录 `dist/DesktopBasketball-win32-x64/DesktopBasketball.exe`
+- **下载**：[**Releases**](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) ——
+  `DesktopBasketball-Setup-1.0.0.exe`（一键安装，87.5 MiB）/ 免安装 `.7z`（273 MB 解压后）
+- **仓库**：<https://github.com/lovehutaocute/DesktopBasketball>（源码、构建脚本、问题反馈）
 - **优先级**：流畅度 > 触控体验 > 物理效果 > 功能完整度 > 视觉效果
+
+> 只想要一个能跑的篮球？**直接装 Release 里的安装包，不需要 Node.js、不需要构建**（见 §5）。
 
 ---
 
 ## 0. 快速开始
+
+**两种用法，先选一条：**
+
+| 你是 | 怎么做 |
+|---|---|
+| **只想玩** | 去 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) 下载 `DesktopBasketball-Setup-1.0.0.exe` 双击安装。**不需要 Node.js，不需要构建。** |
+| **想改代码 / 自己打包** | 按下面的命令行从源码跑（需要 Node.js 18+）。 |
 
 ```bash
 npm install          # 依赖已装好可直接跳过
@@ -1263,12 +1275,20 @@ bash tools/verify-installer.sh
 本项目同时提供**免安装绿色版**（`dist/DesktopBasketball-win32-x64/` 与 `.7z`），
 两种分发形式并列，互不替代。
 
+**两种形式都已随 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) 发布**，
+不构建也能直接下载使用。
+
 ---
 
 ## 5. 可直接运行的最终程序
 
+> **不想构建**：直接下载 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest)
+> 里的 `DesktopBasketball-Setup-1.0.0.exe`（一键安装：开始菜单 + 桌面快捷方式 + 卸载项）
+> 或免安装 `.7z`。下面这些路径是**自己构建后**才有的。
+
 | 方式 | 命令 / 路径 |
 |---|---|
+| 安装包（推荐给普通用户） | Release 附件 `DesktopBasketball-Setup-1.0.0.exe`，或本地 `dist\DesktopBasketball-Setup-1.0.0.exe` |
 | 免安装 exe | `dist\DesktopBasketball-win32-x64\DesktopBasketball.exe`（双击） |
 | 开发模式 | `npm start` = `npx electron .` |
 | 软件合成（驱动异常时） | `DesktopBasketball.exe --no-gpu` 或 `npm run start:nogpu` |
