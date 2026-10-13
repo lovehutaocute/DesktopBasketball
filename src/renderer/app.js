@@ -199,7 +199,7 @@
    * 「适配更多分辨率」的最后一道闸：**绘制成本压不下来时，降的是画布分辨率，不是帧率**。
    * 这是本轮唯一允许改变画面清晰度的地方，但它：
    *   · 只在**实测**绘制中位成本 > 屏周期 62% 时降档（说明连"每帧画一次"都开始吃紧）；
-   *   · 有迟滞（降 40 票 ≈ 0.6s、升 240 票 ≈ 4s）+ 档间静默 2.5s，不会来回抖；
+   *   · 有迟滞（降 40 票 ≈ 0.7s、升 120 票 ≈ 2.4s）+ 档间静默 2.5s，不会来回抖；
    *   · 屏比 120Hz 更快时**完全不介入** —— 那种屏上"少呈现几帧"比"糊一点"更划算，
    *     而且物理只走 60 步/秒，240Hz 下 4 帧才对应 1 步，插值帧本身就是冗余的。
    */
@@ -207,12 +207,87 @@
   const DRS_DOWN_AT = 0.62;   // 绘制中位成本 / 屏周期 超过它 → 投"降"票
   const DRS_UP_AT = 0.34;     // 低于它 → 投"升"票
   const DRS_DOWN_VOTES = 40;
-  const DRS_UP_VOTES = 240;
+  /**
+   * 升档票数。**别往上调**：换档是链式的（1.0↔0.64 之间还有 0.88 / 0.76），
+   * 恢复一级 = 票数 ÷ 帧率 + `DRS_DWELL_MS`。240 票在 50Hz 下是 4.8s/级，
+   * 0.64× 跌到底再回 1.0× 要 3 级 ≈ 22s —— 用户看到的是"负载早没了画面还糊着 20 秒"。
+   * 120 票 ≈ 2.4s/级，全程 ≈ 15s。
+   * 防抖**不靠票数**，靠 `DRS_DWELL_MS`（任何两次换档至少隔 2.5s）+
+   * 升档还额外要求"呈现已经回到健康区间"（见 drsTick 的 presentOk）——
+   * 那两道闸才是防"升→掉帧→降"来回抖的，票数只管要不要采信。
+   */
+  const DRS_UP_VOTES = 120;
   const DRS_DWELL_MS = 2500;
   const DRS_MAX_HZ = 120;
+  /**
+   * ---- 第二路判据：**呈现间隔**（2026-10-12 新增）----
+   *
+   * 上面那一路只看"我们自己的整帧绘制耗时"。但绘制只是这条流水线的一段：
+   * 画完还要光栅化 → 合成 → 提交 → 呈现。球一多（或屏幕大 / 走软件合成），
+   * 后面那几段才是大头，而 `drawMs` 可能只有 1.6ms —— 占屏周期 10%，远低于
+   * `DRS_DOWN_AT = 0.62`，于是 **DRS 一次都不降档，画面却已经掉到 17 帧**。
+   *
+   * 实测（2026-10-12，软件合成 1440×852，N 颗球持续全速运动）：
+   *   球数 1/3/10/40 → p50 15.9~16.7ms（≈屏周期，健康）
+   *   球数 120      → p50 49.6ms，`drawMs` 却只有 1.3ms ⇒ 旧判据完全看不见
+   *   200 球强制换档：1.00× → 17.7 帧/s；0.75× → 27.9；0.64× → 34.5；回 1.00× → 17.4
+   *
+   * 所以补一路**结果导向**的判据：**相邻两次呈现的中位间隔相对参考节拍超标就降档**。
+   * 它不关心是哪一段慢，只关心"到底出帧了没有"。反过来升档时要求呈现已经回到健康区间，
+   * 否则会出现"升档 → 掉帧 → 降档"的来回抖。
+   *
+   * ⚠️ 参考节拍取 `max(屏周期, 1/60s)` —— **不高于 60Hz**：
+   *   · 120Hz 屏上我们的物理本来就只有 60 步/s，只呈现 60 帧是**正常**的，不该因此降画质；
+   *   · 30Hz 屏上 30 帧就是满速，所以再加一道 `displayHz >= DRS_REF_MIN_HZ` 的闸。
+   */
+  const DRS_REF_HZ = 60;
+  const DRS_PRESENT_DOWN_AT = 1.35;   // p50 间隔 / 参考节拍 超过它 → 投"降"票
+  const DRS_PRESENT_UP_AT = 1.10;     // 低于它才允许投"升"票
+  const DRS_MIN_GAPS = 4;             // 窗口内至少这么多间隔样本才敢下结论
+  const DRS_REF_MIN_HZ = 45;          // 屏刷新率低于它 → 这路判据整体不生效
+  /**
+   * 判据② 的**旁证闸**：绘制中位成本低于它时，**禁止**判据② 投"降"票。
+   *
+   * 理由（`tools/probe-drs-floor.js` 实测，2026-10-12/13）：本机（软件合成 + 一堆虚拟
+   * 显示器）即使在 **6~8 颗球**、篮筐关掉、`drawMs` 只有 **0.1ms** 的时候，呈现 p50
+   * 依然是 **30ms 上下**。这个地板**与画面无关**（光栅成本占屏周期 0.6%），是合成器/
+   * 呈现链自己的开销。此时按判据② 降档 = **画面糊掉、一分钱不省**。
+   *
+   * `drawMs` 恰好是"这一帧到底涂了多少像素"的可比量（8 颗球 ≈ 6.5 万 px → 0.1ms；
+   * 200 颗球 ≈ 160 万 px → 2.1ms），而 DRS 省的就是这堆像素的光栅 + 混合。所以这个闸
+   * 的含义很直白：**我们自己没涂多少像素的时候，缩画布不可能是解**。
+   *
+   * ⚠️ 阈值 0.5ms 是量出来的：80 颗球 0.9ms（降档确实有效，39.1 → 48.9 帧/s）必须放行，
+   *    8 颗球 0.1ms 必须拦住，两条实测夹出来的位置。
+   */
+  const DRS_PRESENT_MIN_DRAW_MS = 0.5;
+  /**
+   * ---- 逃生阀：**光栅成本塌了就别再糊着** ----
+   *
+   * 判据② 是"结果导向"的，它只知道"出帧没出够"，不知道**为什么**。于是有一个反过来的坑：
+   * 如果卡是因为**分辨率管不着的原因**（软件合成器本身、虚拟显示器、特效叠加），
+   * 判据② 会一直报"呈现不健康"，DRS 就永远留在最糊的档位上 —— 而这时的降分辨率
+   * 其实**一分钱都没省下来**。
+   *
+   * 实测（`tools/probe-drs-floor.js`，6 颗球 / 关掉篮筐 / 软件合成 / 1440×852）：
+   *   `drawMs` 已经掉到 **0.1ms**（占屏周期 0.6%），呈现却仍是 p50≈30ms、40 帧/s ——
+   *   瓶颈完全在画布之外。此时把 0.64× 升回 1.0×，绘制成本 0.1 → 0.24ms，
+   *   对帧率的影响落在噪声里，但画面该清晰就清晰。
+   *
+   * 所以这里用的是**相对量**：拿"上一次降档当时的绘制成本"当基准，掉到它的
+   * `DRS_RASTER_GONE_FRAC` 以下，就认定"当初降档的理由已经不成立"。用相对量而不是
+   * 绝对值，是因为绘制成本本来就跟着画布像素数走（0.64× 上量到的 1.9ms 与
+   * 1.0× 上量到的 4.6ms 是同一件事）。
+   *
+   * ⚠️ 阈值取 0.35 是量出来的：降一档画布面积只降到 0.83 倍，也就是说**换档本身
+   *    永远触发不了这个阀**（要连降三档才到 0.57），只有**负载真的掉了**才触发。
+   */
+  const DRS_RASTER_GONE_FRAC = 0.35;
   let drsIndex = 0;
   let drsLastChange = 0;
   let drsDownVotes = 0, drsUpVotes = 0;
+  /** 上一次降档当时的绘制中位成本（ms）；逃生阀的基准。只在"降"时更新，跨"升"保留。 */
+  let drsDownCost = 0;
   /** 验收用：强制渲染缩放（null = 交给 DRS 自动）。见 `__pbScale`。 */
   let renderScaleForce = null;
   /**
@@ -254,6 +329,8 @@
    */
   let presentLastAt = 0, presentN = 0, presentGaps = [], presentStalls = 0, presentMaxGap = 0;
   let presentHz = 0, presentP50 = 0, presentP95 = 0, presentJitter = 0;
+  /** 上面那组数字的**样本数**（presentGaps 在 updatePerf 里被清空前记下）——DRS 判据靠它防小样本误判 */
+  let presentGapN = 0;
   /** 累计值（不被 250ms 窗口清掉）——验收脚本靠它判断"确实一直在出帧" */
   let presentTotal = 0, presentStallTotal = 0;
 
@@ -262,7 +339,7 @@
   // 与"绘制频率"这两个变量，见 main.js 的 --drag-test。
   // region 决定拖拽期间怎么上报区域：'full' = 整窗（默认，见 sendShape 的说明）；
   // 'corridor' = 只报一条跟着指针走的窄走廊（被 --drag-test 用来做 A/B）。
-  const bench = { timer: 0, t: 0, cx: 0, cy: 0, r: 150, hz: 200, om: 0.09, noLock: false, region: 'full', park: false, raf: 0 };
+  const bench = { timer: 0, t: 0, cx: 0, cy: 0, r: 150, hz: 200, om: 0.09, noLock: false, region: 'full', park: false, raf: 0, noShape: false };
   let probeN = 0;
 
   // 高速飞行验收钩子的状态（见文件末尾 __pbFlyRunner）。
@@ -1101,7 +1178,13 @@
   /**
    * DRS 的投票器：每帧投一次"降/升/不动"票，票数够了才真的换档。
    *
-   * 判据用**比值**（绘制中位成本 / 屏周期）而不是绝对值 —— 同一个 8ms 的绘制，
+   * 两路判据，**任一路报警就降档**：
+   *   ① 绘制成本比值（`drawMs` / 屏周期）—— 我们自己的 JS 画得动吗；
+   *   ② 呈现间隔比值（`presentP50` / 参考节拍）—— 画完之后那一串（光栅/合成/提交/呈现）
+   *      到底出帧了没有。见 DRS_REF_HZ 那一大段注释：只有 ① 时，
+   *      "球多到掉到 17 帧"这件事在 DRS 眼里是**完全隐形**的。
+   *
+   * 判据①用**比值**（绘制中位成本 / 屏周期）而不是绝对值 —— 同一个 8ms 的绘制，
    * 在 60Hz 屏（周期 16.7）上是宽裕的，在 144Hz 屏（6.9）上已经超支。
    */
   function drsTick(now) {
@@ -1111,9 +1194,35 @@
     const cost = drawMsMedian();
     if (!(cost > 0) || !(displayPeriod > 0)) return;
     const ratio = cost / displayPeriod;
-    if (ratio > DRS_DOWN_AT) { drsDownVotes++; drsUpVotes = 0; }
-    else if (ratio < DRS_UP_AT) { drsUpVotes++; drsDownVotes = 0; }
-    else { drsDownVotes = 0; drsUpVotes = 0; }
+
+    // ---- 判据②：呈现间隔（结果导向）
+    const refPeriod = Math.max(displayPeriod, 1000 / DRS_REF_HZ);
+    const havePresent = presentGapN >= DRS_MIN_GAPS && presentP50 > 0 && displayHz >= DRS_REF_MIN_HZ;
+    // 逃生阀：光栅成本相对"上次降档当时"已经塌了 ⇒ 分辨率不是瓶颈，别再拿它当理由
+    // （见 DRS_RASTER_GONE_FRAC 那段注释）
+    const rasterGone = drsDownCost > 0 && cost < drsDownCost * DRS_RASTER_GONE_FRAC;
+    // 旁证闸：连像素都没涂几个（见 DRS_PRESENT_MIN_DRAW_MS）⇒ 缩画布救不了，判据② 闭嘴
+    const canBlameRaster = cost >= DRS_PRESENT_MIN_DRAW_MS;
+    const presentBad = havePresent && canBlameRaster && presentP50 > refPeriod * DRS_PRESENT_DOWN_AT && !rasterGone;
+    // 没拿到可信样本时**不拦升档**（例如刚从空闲里醒过来，窗口里还没几个样本）——
+    // 否则一旦降过头就再也升不回去。升档另有成本判据把关。
+    const presentOk = rasterGone || !havePresent || presentP50 < refPeriod * DRS_PRESENT_UP_AT;
+
+    if (ratio > DRS_DOWN_AT || presentBad) { drsDownVotes++; drsUpVotes = 0; }
+    else if (ratio < DRS_UP_AT && presentOk) { drsUpVotes++; drsDownVotes = 0; }
+    else {
+      /**
+       * 迟滞区（呈现 p50 落在参考节拍的 1.10× ~ 1.35× 之间）：**不清零，只回退一票**。
+       *
+       * 原来这里是 `drsDownVotes = 0; drsUpVotes = 0;` —— 看着更"干净"，其实是**死区**：
+       * 只要呈现 p50 长期落在迟滞区间内侧，两路判据都不投票、每帧把票数打回 0，
+       * DRS 就**永久卡在当前档位**（`tools/probe-drs-stuck.js` 抓到的正是这个：
+       * 负载从 200 颗球掉到 6 颗，18s 内一票都没攒起来、档位纹丝不动）。
+       * 回退一票的效果是"停一会儿就忘了"：既不留死区，也不会因为陈年旧票突然换档。
+       */
+      if (drsDownVotes) drsDownVotes--;
+      if (drsUpVotes) drsUpVotes--;
+    }
     if (now - drsLastChange < DRS_DWELL_MS) return;
     if (drsDownVotes >= DRS_DOWN_VOTES && drsIndex < DRS_STEPS.length - 1) {
       drsIndex++;
@@ -1128,6 +1237,13 @@
   function applyDrs(dir) {
     drsLastChange = performance.now();
     drsDownVotes = 0; drsUpVotes = 0;
+    /**
+     * 记下"这次降档当时"的绘制成本 —— 逃生阀拿它当基准（见 drsTick 的 rasterGone）。
+     * **必须在 `resize()` 之前取**：resize 之后画布已经变小、成本已经变了。
+     * 升档时**不更新**：基准要一直是"上一次降档的理由"，否则升一级就自己把理由抹掉了，
+     * 会在"升一档 → 呈现还是不健康 → 降回来"之间来回抖。
+     */
+    if (dir === '降') drsDownCost = drawMsMedian();
     const before = dpr;
     resize();
     if (!drsLogged && Math.abs(dpr - before) > 0.001) {
@@ -1135,7 +1251,9 @@
       console.log('[drs] ' + dir + '到 ' + (Math.round(dpr * 100) / 100) + '× dpr（' +
         W + '×' + H + '，画布 ' + Math.round(W * dpr) + '×' + Math.round(H * dpr) +
         '，绘制中位 ' + (Math.round(drawMsMedian() * 100) / 100) + 'ms / 屏周期 ' +
-        (Math.round(displayPeriod * 100) / 100) + 'ms）');
+        (Math.round(displayPeriod * 100) / 100) + 'ms' +
+        '，呈现中位 ' + (Math.round(presentP50 * 100) / 100) + 'ms' +
+        '，' + presentGapN + ' 个样本）');
     }
   }
 
@@ -1601,6 +1719,15 @@
   function sendShape(force, sync) {
     // 兜底：早期调用（onInit 里的 world.setHoop → onHoopChanged）可能早于 W/H 就位
     if (!renderer || !world || !cfg || !W || !H) return;
+    /**
+     * 诊断开关：整条"区域上报"链（渲染进程算圆 → IPC → 主进程 N 次
+     * CreateEllipticRgn + CombineRgn → SetWindowRgn）**一次都不走**。
+     *
+     * 存在的理由：这条链的成本全在主进程，渲染进程的 `LAGSTAT` 只看得到 IPC 排队时间，
+     * 量不出"主进程为重算区域花了多少"。把它整体关掉再 A/B 主循环的出帧率，
+     * 才能回答"区域这条链值多少帧"。见 `__pbDragRunner('shapeoff')` 与 README §6.5。
+     */
+    if (bench.noShape) return;
     /**
      * 拖拽 / 右键菜单期间一律把窗口区域撑成**整窗**。
      *
@@ -2256,8 +2383,10 @@
       presentP50 = gs[gs.length >> 1];
       presentP95 = gs[Math.min(gs.length - 1, Math.floor(gs.length * 0.95))];
       presentJitter = presentP95 - presentP50;
+      presentGapN = gs.length;
     } else {
       presentP50 = 0; presentP95 = 0; presentJitter = 0;
+      presentGapN = 0;
     }
     frames = 0;
     loopCount = 0;
@@ -2497,7 +2626,30 @@
       renderScaleSteps: DRS_STEPS.slice(),
       renderScaleForce: renderScaleForce,
       drsVotes: [drsDownVotes, drsUpVotes],
+      /** 逃生阀的基准：上一次降档当时的绘制中位成本（ms）。见 drsTick 的 rasterGone。 */
+      drsDownCost: Math.round(drsDownCost * 100) / 100,
+      /** 判据② 的旁证闸（ms）：`drawMsMedian` 低于它时判据② 不许投"降"票。见常量注释。 */
+      drsPresentMinDrawMs: DRS_PRESENT_MIN_DRAW_MS,
+      /**
+       * 特效当前的规模。排"呈现变慢"时必须能区分**球多**还是**特效多**：
+       * 一次进球就是几百粒火花 + 光环 + 彩带（见 §2.13），它们和球一样要吃光栅与合成。
+       * 实测的坑：6 颗球、`drawMs` 只有 0.1ms，呈现却只有 40 帧/s ——
+       * 先看这三项和 `drsDownCost`，别一口咬定是球数
+       * （`tools/probe-drs-floor.js` 就是靠这几个数把账算清的）。
+       */
+      fxParts: fx.particles.length,
+      fxRings: fx.rings.length,
+      trailBalls: world.balls.filter((b) => b._trail && b._trail.length > 1).length,
+      /** 判据②用到的两个量：参考节拍（ms）与窗口内的呈现间隔样本数 */
+      drsRefMs: rd2(Math.max(displayPeriod, 1000 / DRS_REF_HZ)),
+      presentGapN: presentGapN,
       dynScale: cfg.dynScale !== false,
+      /**
+       * 主循环当前是不是走"空闲巡检"（160ms 一跳）。**排 DRS 问题时必须先看它**：
+       * 空闲分支在 `drsTick` 之前就 return 了，idle=true 时 DRS 一票都不会投 ——
+       * 现象是"档位纹丝不动"，很容易误判成"票数阈值太严"。
+       */
+      idle: isIdle(),
       scheduled: scheduled,
       presentHz: Math.round(presentHz * 10) / 10,
       presentP50Ms: Math.round(presentP50 * 100) / 100,
@@ -2592,12 +2744,17 @@
    * 后果是"60Hz 预算 > 旧常数 6ms"这类判据被环境噪声判负 —— 看着像模型坏了，其实只是尺子错了。
    *
    * 只清窗口，不碰任何行为：切球数 / 换皮肤 / 换分辨率之后想要干净的基线，都该调它。
+   *
+   * ⚠️ **故意不清 `drsDownCost`**（DRS 逃生阀的基准）：它是"上一次降档的理由"，
+   *    属于状态而不是采样。在这里清零会让夹具刚量完降档就把基准抹掉，
+   *    紧接着的"升回去"那段就失去了判据（`verify-drs.js` 第 ② 段末尾就调了它）。
    */
   window.__pbPerfReset = function () {
     physFrameWin.length = 0; physFrameSum = 0;
     drawCostWin.length = 0;
     drsDownVotes = 0; drsUpVotes = 0;
     presentGaps.length = 0;
+    presentGapN = 0;
     return true;
   };
   /**
@@ -3011,6 +3168,8 @@
       };
     }
     if (cmd === 'cap') { frameMinMs = Math.max(0, Number(a) || 0); return frameMinMs; }
+    // 关掉整条区域上报链（含主进程 GDI 重算），用来 A/B 这条链值多少帧
+    if (cmd === 'shapeoff') { bench.noShape = !!a; sendShape(true, true); return bench.noShape; }
     if (cmd === 'shape') { bench.noLock = !!a; sendShape(true, true); return bench.noLock; }
     // 'full'（默认）= 拖拽期间整窗放开；'corridor' = 只报窄走廊。A/B 用，见 sendShape 注释。
     if (cmd === 'region') {

@@ -27,7 +27,7 @@
 ; ============================================================================
 
 #define AppName        "桌面物理篮球"
-#define AppVersion     "1.0.0"
+#define AppVersion     "1.0.1"
 #define AppPublisher   "DesktopBasketball"
 #define AppExeName     "DesktopBasketball.exe"
 ; ⚠️ 必须**自带 .lnk 后缀**：Inno 的 CreateShellLink() **不会**自动补后缀
@@ -48,7 +48,7 @@
 #else
   #define FixedDir     "{autopf}\DesktopBasketball"
   #define PrivLevel    "admin"
-  #define OutName      "DesktopBasketball-Setup-1.0.0"
+  #define OutName      "DesktopBasketball-Setup-1.0.1"
 #endif
 
 [Setup]

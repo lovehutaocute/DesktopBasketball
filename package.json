@@ -1,7 +1,7 @@
 {
   "name": "desktop-basketball",
   "productName": "DesktopBasketball",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Windows 桌面物理篮球 — 透明覆盖层 + Matter.js 物理 + 触控投掷",
   "main": "src/main.js",
   "author": "DesktopBasketball",

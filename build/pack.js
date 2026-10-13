@@ -57,11 +57,11 @@ const SEVENZ = process.argv.includes('--7z');
  *
  * 减小的**不是功能也不是画质**，只是 Electron 白带、本项目根本用不到的资源：
  *  · locales/ 55 种语言只留 zh-CN / en-US / en-GB（省 44 MB）
- *  · 删掉 14.5 MB 的 LICENSES.chromium.html（纯许可文本，Chromium 运行时从不读）
- * 刻意**不动**：dxcompiler/dxil（WebGPU 用；删了可能让 GPU 初始化静默降级 = 偷偷降画质）、
- * icudtl.dat / resources.pak / libGLESv2 / d3dcompiler_47（渲染刚需）、
- * vk_swiftshader / vulkan-1（无 GPU 时的兜底）。
+ *  · `slim-list.js::DROP_TOP`：许可证文本 + WebGPU 着色器编译器 + ffmpeg（省 ~45 MB）
+ * **删什么/留什么、每一项的理由，全部写在 build/slim-list.js 里**（唯一清单：
+ * slim.js 照着真删，这里照着写 7z 的排除清单，不会漂移）。
  */
+const SLIM_LIST = require('./slim-list');
 const SLIM = !process.argv.includes('--no-slim');
 
 // ------------------------------------------------------------------ NTFS 透明压缩
@@ -251,8 +251,18 @@ async function main() {
       process.stdout.write(execFileSync(process.execPath, [path.join(__dirname, 'slim.js'), dir],
         { encoding: 'utf8' }));
     } catch (e) {
-      console.log('体积裁剪失败（不影响产物本身）：' +
-        String((e.stdout || '') + (e.stderr || '')).trim());
+      /**
+       * ⚠️ **失败必须显眼**。原来这里只说一句"体积裁剪失败（不影响产物本身）"，
+       * 而 slim.js 在"删了一部分、剩几个删不掉"时是**打一行字就正常退出**的 ——
+       * 于是产物目录里会静静躺着 42 MB 本该删掉的 DLL（2026-10-13 实际发生：
+       * `dxcompiler.dll` / `dxil.dll` / `LICENSES.chromium.html` 都还在），
+       * 而压缩包那边因为有 `-x@` 排除清单照样干净 —— 现象是"7z 变小了，装完却一样大"。
+       * 所以现在 slim.js 遇到残留会以退出码 2 结束，这里就把话说明白。
+       */
+      const msg = String((e.stdout || '') + (e.stderr || '')).trim();
+      console.log('\n⚠️ 体积裁剪**没有完全成功**（产物本身可用，但目录里还留着本该删的文件）：');
+      console.log('   ' + (msg || e.message));
+      console.log('   手动重跑一次即可：node build/slim.js ' + dir);
     }
   }
   const exe = path.join(dir, 'DesktopBasketball.exe');
@@ -325,7 +335,7 @@ async function main() {
 
 /** 生成给 7z 用的排除清单（`-x@file`）；没有可排除项时返回 null */
 function writeSlimExcludeList(dir) {
-  const KEEP = new Set(['zh-CN', 'en-US', 'en-GB']);
+  const KEEP = new Set(SLIM_LIST.KEEP_LOCALES);
   const base = path.basename(dir);
   const lines = [];
   const loc = path.join(dir, 'locales');
@@ -335,7 +345,7 @@ function writeSlimExcludeList(dir) {
       lines.push(base + '/locales/' + f);
     }
   }
-  for (const f of ['LICENSES.chromium.html']) {
+  for (const f of SLIM_LIST.DROP_TOP) {
     if (fs.existsSync(path.join(dir, f))) lines.push(base + '/' + f);
   }
   if (!lines.length) return null;

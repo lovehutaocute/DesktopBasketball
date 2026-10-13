@@ -3,7 +3,7 @@
 > 本文档面向**后续阅读和维护本项目的 AI**。所有内容基于当前仓库的实际实现，
 > 每一条命令、路径、坑点都在本机实测过。改动安装器前请先读完本文。
 >
-> 最后核对：2026-10-07（Inno Setup 6.7.3 / 产物 87.5 MiB）
+> 最后核对：2026-10-13（Inno Setup 6.7.3 / 产物 80.9 MiB）
 
 ---
 
@@ -16,9 +16,9 @@
 | 编译器 | Inno Setup **6.7.3**（`ISCC.exe`） |
 | 主脚本 | `build/installer.iss` |
 | 测试包装 | `build/installer-test.iss` |
-| 输出 | `dist/DesktopBasketball-Setup-1.0.0.exe`（**87.5 MiB**） |
-| 打包内容 | `dist/DesktopBasketball-win32-x64/**` —— 23 个文件，整树递归 |
-| payload 大小 | **269.6 MiB**（逻辑）/ 115 MB（NTFS 压缩后磁盘占用） |
+| 输出 | `dist/DesktopBasketball-Setup-1.0.1.exe`（**80.9 MiB**） |
+| 打包内容 | `dist/DesktopBasketball-win32-x64/**` —— 21 个文件，整树递归 |
+| payload 大小 | **243.5 MiB**（逻辑）/ 106 MB（NTFS 压缩后磁盘占用） |
 | 编译耗时 | **约 62 秒**（`lzma2/max` + 固实压缩） |
 | 安装目录 | `{autopf}\DesktopBasketball`（即 `C:\Program Files\DesktopBasketball`） |
 
@@ -120,14 +120,14 @@ ls "$TEMP/innosetup/portable/Languages/ChineseSimplified.isl"
 ```bash
 cd C:/Users/DELL/Desktop/AI/zuqiu/desktop-basketball
 export ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/
-node build/pack.js          # 约 8 秒，产出 115 MB（NTFS 压缩后）
+node build/pack.js          # 约 8 秒，产出 106 MB（NTFS 压缩后）
 ```
 
 ### 4.2 编译正式版
 
 ```bash
 "$TEMP/innosetup/portable/ISCC.exe" build/installer.iss
-# → dist/DesktopBasketball-Setup-1.0.0.exe
+# → dist/DesktopBasketball-Setup-1.0.1.exe
 ```
 
 ### 4.3 编译测试版（Agent 侧自测用）
@@ -153,7 +153,7 @@ Agent 环境 `IsAdmin=False`，**无法确认 UAC 弹窗**，跑正式版（`Pri
 |---|---|---|
 | `FixedDir` | `{autopf}\DesktopBasketball` | `{localappdata}\DesktopBasketball-TEST` |
 | `PrivLevel` | `admin` | `lowest` |
-| `OutName` | `DesktopBasketball-Setup-1.0.0` | `DesktopBasketball-Setup-TEST` |
+| `OutName` | `DesktopBasketball-Setup-1.0.1` | `DesktopBasketball-Setup-TEST` |
 
 > ⚠️ **`/DTESTMODE` 命令行 define 用不了。** 试过 `/DTESTMODE`、`/DTESTMODE=1`、
 > `"/DTESTMODE=1"` 全部报 `You may not specify more than one script filename.`
@@ -389,7 +389,7 @@ ISCC 要把图标资源嵌进 setup 自身，超限直接失败。
 —— 说明上一个安装器进程还活着（卡在 MessageBox 上）。
 
 ```bash
-tasklist //FI "IMAGENAME eq DesktopBasketball-Setup-1.0.0.exe"
+tasklist //FI "IMAGENAME eq DesktopBasketball-Setup-1.0.1.exe"
 ```
 
 > ⚠️ 若该进程是以 admin 提权的，`Stop-Process` 会报「拒绝访问」。
@@ -558,8 +558,8 @@ TSETUP 时代的 `Uninstall.exe` 判据已废弃。
 ## 10. 与上游打包链的关系
 
 ```
-src/  ──npm run pack──>  dist/DesktopBasketball-win32-x64/  ──ISCC──>  dist/DesktopBasketball-Setup-1.0.0.exe
-                            (23 文件, 115 MB)                              (87.5 MiB 单文件)
+src/  ──npm run pack──>  dist/DesktopBasketball-win32-x64/  ──ISCC──>  dist/DesktopBasketball-Setup-1.0.1.exe
+                            (21 文件, 106 MB)                              (80.9 MiB 单文件)
 ```
 
 | 环节 | 脚本 | 说明 |
@@ -602,7 +602,7 @@ src/  ──npm run pack──>  dist/DesktopBasketball-win32-x64/  ──ISCC�
 
 1. `dist/DesktopBasketball-win32-x64/` 存在且是最新（必要时重跑 `pack.js`）
 2. 没有残留的安装器进程
-   （`tasklist //FI "IMAGENAME eq DesktopBasketball-Setup-1.0.0.exe"`）
+   （`tasklist //FI "IMAGENAME eq DesktopBasketball-Setup-1.0.1.exe"`）
 3. ISCC 与中文语言包就位（§3.3）
 
 ### 本目录文件职责

@@ -7,7 +7,7 @@ Windows 桌面上的透明覆盖层 + 真实刚体物理篮球。篮球**浮于�
 - **技术栈**：Electron 38 + Matter.js 0.20 + koffi（Win32 FFI），全部 MIT / Apache 系宽松许可
 - **产物**：免安装绿色目录 `dist/DesktopBasketball-win32-x64/DesktopBasketball.exe`
 - **下载**：[**Releases**](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) ——
-  `DesktopBasketball-Setup-1.0.0.exe`（一键安装，87.5 MiB）/ 免安装 `.7z`（273 MB 解压后）
+  `DesktopBasketball-Setup-1.0.1.exe`（一键安装，81 MiB）/ 免安装 `.7z`（244 MB 解压后）
 - **仓库**：<https://github.com/lovehutaocute/DesktopBasketball>（源码、构建脚本、问题反馈）
 - **优先级**：流畅度 > 触控体验 > 物理效果 > 功能完整度 > 视觉效果
 
@@ -21,7 +21,7 @@ Windows 桌面上的透明覆盖层 + 真实刚体物理篮球。篮球**浮于�
 
 | 你是 | 怎么做 |
 |---|---|
-| **只想玩** | 去 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) 下载 `DesktopBasketball-Setup-1.0.0.exe` 双击安装。**不需要 Node.js，不需要构建。** |
+| **只想玩** | 去 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest) 下载 `DesktopBasketball-Setup-1.0.1.exe` 双击安装。**不需要 Node.js，不需要构建。** |
 | **想改代码 / 自己打包** | 按下面的命令行从源码跑（需要 Node.js 18+）。 |
 
 ```bash
@@ -1045,36 +1045,50 @@ node build/pack.js --no-compact   # 不做 NTFS 透明压缩（磁盘占用翻�
 
 ### 4.1.1 体积裁剪（默认开启；不减功能，也不降画质）
 
-一个普普通通的 2D 篮球游戏为什么要 328 MB？因为体积**几乎全是 Electron 运行时**，
-跟游戏本身无关（本项目的代码 + 贴图只有 3.4 MB）。实测构成与处置：
+一个普普通通的 2D 篮球游戏为什么要 324 MB？因为体积**几乎全是 Electron 运行时**，
+跟游戏本身无关（本项目的代码 + 贴图只有 3.4 MB）。实测构成与处置（`node_modules/electron/dist`
+原生 324.1 MB / 75 个文件 → 剪完 243.5 MB / 21 个文件）：
 
 | 文件 | 大小 | 处置 |
 |---|---|---|
 | `DesktopBasketball.exe`（Chromium 本体） | 200.7 MB | **内容动不了**（PE 段全是运行时必需，见 §4.1.2）。这里只能靠 NTFS 压缩把它压到 84.7 MB |
-| `dxcompiler.dll` + `dxil.dll` | 26.2 MB | **保留**：WebGPU / D3D12 的着色器编译器。本项目是 Canvas 2D，理论上用不到，但删了有可能让 GPU 初始化**静默降级**到软件渲染 —— 那就是偷偷降画质 |
+| `dxcompiler.dll` + `dxil.dll` | 26.2 MB | **删**：WebGPU / D3D12 的着色器编译器（HLSL → DXIL）。本项目的画布是 **CPU 光栅化的 Canvas 2D**，GPU 合成走 ANGLE 的 **D3D11** 后端（那个用的是 `d3dcompiler_47.dll`，**保留**）。Compiler 不在时 Dawn 只会报"WebGPU 不可用"，不碰 GPU 进程的 D3D11 初始化。⚠️ **推理不算数，这两个是实测过才删的**：用 `--in-process-gpu`（避开"Agent 侧起不了 GPU 进程"）在打包版上跑 `--no-gpu` 与 `--in-process-gpu --use-angle=d3d11`（真实硬件路径）两条路，均正常出帧、无 GPU 进程崩溃。**判据是"删了要在打包版上实测启动 + 出帧"** |
 | `LICENSES.chromium.html` | 14.5 MB | **删**：纯许可文本，Chromium 运行时从不读它（完整文本见 Chromium 源码树） |
 | `locales/`（55 种语言） | 44.0 MB | **只留 `zh-CN` / `en-US` / `en-GB`**，其余 52 个删掉 |
 | `icudtl.dat` | 10.0 MB | 保留：ICU 国际化数据，硬依赖 |
 | `libGLESv2` / `libEGL` / `d3dcompiler_47` | 12.9 MB | 保留：ANGLE(D3D11) 渲染刚需 |
 | `resources.pak` / `chrome_*_percent.pak` | 6.3 MB | 保留：Chromium 内置资源 |
-| `vk_swiftshader` / `vulkan-1` | 6.2 MB | 保留：没有可用 GPU 时的软件渲染兜底（本机就靠它跑） |
+| `vk_swiftshader` / `vulkan-1` | 6.2 MB | 保留：**没有可用硬件 GPU 时的兜底**。托盘有「软件合成」开关，且 GPU 连崩 2 次后本应用会自己落盘 `forceNoGpu`；留着它这类机器还有机会走软件 Vulkan，删掉就彻底按在纯 CPU 合成上 —— 那**正是帧率问题**（与本轮"多球不掉帧"的目标相反，所以这 6 MB 不省） |
+| `ffmpeg.dll` | 2.9 MB | ⛔ **绝不能删**（曾经删过，代价是一次完整的"打包版启动即崩"）。声音确实全走 WebAudio（见 `src/renderer/audio.js`）、没有任何 `<audio>`/`<video>`，但 **Chromium 的渲染进程在启动时就会 `InitializeMediaLibrary()` → `LoadLibrary("ffmpeg.dll")`，加载失败是致命 CHECK**：打包版一启动就 `render-process-gone exitCode=-2147483645`（`STATUS_BREAKPOINT`）、每 1.3 秒崩一次、`ready-to-show` 永不触发、`--eval` 一个结果都不回；而开发版（`node_modules/electron/dist/` 里 ffmpeg 还在）完全正常，所以**只在打包版暴露**。拷回去立刻恢复。**"代码里没用" ≠ "进程不加载"** |
 | `app.asar`（本项目代码 + 贴图） | 5.36 MB | 保留（**已在打包时瘦身到 0.91 MB**，见 §4.1.3；这 5.36 MB 里有 1.78 MB 是**误打包进来的用户数据** `$WIN_T`） |
 
-**结果：逻辑大小 329 MB → 273 MB**（-17%）。语言包少掉不影响任何功能 —— 找不到匹配语言会自动回退 `en-US`。
-（这是**文件级**的裁剪；把**磁盘占用**再压到 115 MB 是下一步的 NTFS 透明压缩，见 §4.1.2。）
+**结果：逻辑大小 324 MB → 282 MB（只留语言包）→ 243.5 MB（再删 LICENSES + dxcompiler/dxil），
+共 −80.6 MB / −25%。** 语言包少掉不影响任何功能 —— 找不到匹配语言会自动回退 `en-US`。
+（这是**文件级**的裁剪；把**磁盘占用**再压到 106 MB 是下一步的 NTFS 透明压缩，见 §4.1.2。
+⚠️ 两个数字别混：**逻辑 243.5 MB / 磁盘 106 MB** —— 后者才是用户装完占的地方，前者不是。）
 
 实现与注意：
 
 - `npm run pack` **默认就裁剪**，`--no-slim` 关掉。
+- **唯一的清单在 `build/slim-list.js`**：`slim.js` 照着它在产物目录里**真删**，
+  `pack.js` 照着它写 7z 的 `-x@` 排除清单。同一份清单两个用途，**别在别处硬编码文件名**
+  （分开写必然漂移成"7z 里有、目录里没有"，两个分发包大小对不上）。
 - 实际动作在 **`build/slim.js`**，由 `pack.js` 以**子进程**调用。**为什么必须另起一个进程**：
-  本机的 safe-delete shim 按「**本进程**累计删除的文件数」设阈值（50），packager 打完一个
-  328 MB 的包内部已经把配额吃掉了，同一个进程里再删 53 个文件会**全部失败**
-  （`trash operation ... Some operations were aborted`）；换个干净的 node 进程删就是 52/52 成功。
+  packager 打完一个 300+ MB 的包内部已经把删除额度（safe-delete shim，阈值 50）吃掉了，
+  同一个进程里再删会全部失败（`trash operation ... Some operations were aborted`）。
+  ⚠️ 而且**一轮还不够**：要删 55 个文件，实测每轮删到第 48~49 个就开始整批失败，失败的永远
+  是按列表顺序的**尾巴**（`uk/ur/vi/zh-TW.pak` + `LICENSES.chromium.html` + `dxcompiler.dll`
+  + `dxil.dll`）。所以 slim 会**自己换干净进程重试**；**在 Agent 沙箱里换进程也没用**（额度按
+  会话算，子进程一样 0 删除），这时按它打印的提示**手动再跑一次**
+  `node build/slim.js dist/DesktopBasketball-win32-x64` 即可。
+  ⚠️ **这个坑特别阴**：压缩包那边有 `-x@` 排除清单，**照样是干净的**，所以只有"产物目录"
+  受害（白留 44 MB），现象是"7z 变小了、装完的目录却几乎没变"。现在 slim 遇残留会以退出码 2
+  结束、`pack.js` 打一行醒目 WARNING，打包时一眼能看见。
 - `--7z` 压缩时再加一道 `-x@<清单>` **排除**（7z 是外部程序，不受 Node 侧 shim 限制）。
   所以哪怕某种环境下 `slim.js` 一个文件都没删掉，压缩包照样不会把 44 MB 语言包算进去。
-- 还想更小可以再砍 `dxcompiler.dll` + `dxil.dll`（约再省 10 MB），但那有 GPU 静默降级风险，
-  **默认不砍**。要试就直接删掉这两个文件跑一次，有问题装回来即可（它们在
-  `node_modules/electron/dist/` 里有原件）。
+- **这就是"不压缩"路线的底了**：剩下的每一 MB 都是 `DesktopBasketball.exe` 里的 Chromium ——
+  要么换运行时（不是本项目的量级），要么删上面那张"保留"表里的东西（会真降功能）。
+  `node_modules/electron/dist/` 里有全部原件，删错了装回去即可。
 
 
 ### 4.1.3 asar 瘦身（默认开启；`app.asar` 5.36 MB → 0.91 MB）
@@ -1249,7 +1263,7 @@ npm i -D @electron/packager
 
 ### 4.3 安装程序（单文件安装包）
 
-本仓库自带一套 **Inno Setup** 方案，产出 `dist/DesktopBasketball-Setup-1.0.0.exe`（约 87 MiB）。
+本仓库自带一套 **Inno Setup** 方案，产出 `dist/DesktopBasketball-Setup-1.0.1.exe`（约 81 MiB）。
 覆盖：固定安装目录、桌面快捷方式、扫描 C/D 盘一二级目录批量建快捷方式、
 零交互安装、进度条。
 
@@ -1283,12 +1297,12 @@ bash tools/verify-installer.sh
 ## 5. 可直接运行的最终程序
 
 > **不想构建**：直接下载 [Releases](https://github.com/lovehutaocute/DesktopBasketball/releases/latest)
-> 里的 `DesktopBasketball-Setup-1.0.0.exe`（一键安装：开始菜单 + 桌面快捷方式 + 卸载项）
+> 里的 `DesktopBasketball-Setup-1.0.1.exe`（一键安装：开始菜单 + 桌面快捷方式 + 卸载项）
 > 或免安装 `.7z`。下面这些路径是**自己构建后**才有的。
 
 | 方式 | 命令 / 路径 |
 |---|---|
-| 安装包（推荐给普通用户） | Release 附件 `DesktopBasketball-Setup-1.0.0.exe`，或本地 `dist\DesktopBasketball-Setup-1.0.0.exe` |
+| 安装包（推荐给普通用户） | Release 附件 `DesktopBasketball-Setup-1.0.1.exe`，或本地 `dist\DesktopBasketball-Setup-1.0.1.exe` |
 | 免安装 exe | `dist\DesktopBasketball-win32-x64\DesktopBasketball.exe`（双击） |
 | 开发模式 | `npm start` = `npx electron .` |
 | 软件合成（驱动异常时） | `DesktopBasketball.exe --no-gpu` 或 `npm run start:nogpu` |
@@ -2092,7 +2106,7 @@ grep -o 'EVAL ok.*' "$T/runtime.log"
 | 刷新率 | 夹在 `[60,144]` | `period = 1000/hz`，节流 `= min(1000/70, period×0.92)` | 24~360Hz；缺报时回落 60 并用 rAF 实测补齐 |
 | 插值补帧预算 | 常数 6ms（后改 `period×0.55`） | `clamp(period×0.75 − physPerFrame, 2.5, 14)` | 由实测成本定，与分辨率/球数/机器无关 |
 | 画布像素数 | 无上限（= 分辨率 × dpr²） | 上限 **8.3Mpx**（= 4K@1x），超出按面积缩 dpr | 8K / 4K@150% / 4K@200% / 1280×800@300% |
-| 绘制成本压不住 | 只能放弃补帧 | **DRS**：降画布分辨率（`1→0.88→0.76→0.64`×dpr），**不降帧率** | 屏 ≤120Hz 且成本 > 屏周期 62% 时介入 |
+| 绘制成本压不住 / **画完了却出不了帧** | 只能放弃补帧 | **DRS**：降画布分辨率（`1→0.88→0.76→0.64`×dpr），**不降帧率** | 屏 ≤120Hz，且「绘制成本 > 屏周期 62%」**或**「绘制中位成本 ≥ 0.5ms **且** 相邻呈现间隔中位 > 1.35× 参考节拍」 |
 
 **实测的"设备 → 画布"对照**（`__pbDeviceFit()`，无需真机）：
 
@@ -2114,8 +2128,35 @@ grep -o 'EVAL ok.*' "$T/runtime.log"
   它在 4K@150% 上会把 dpr 从 1.5 压到 1.0 —— 略软，但比"两张 18.7Mpx 全屏画布"稳得多。
   **不能**反过来砍帧率来省绘制（用户明确否掉了这条路）。
 - **DRS 只在屏 ≤120Hz 时介入**：240Hz 屏上"少呈现几帧"比"糊一点"划算得多，而且物理只走
-  60 步/秒，240Hz 下 4 帧才对应 1 步、插值帧本身高度冗余。DRS 有迟滞（降 40 票≈0.6s、
-  升 240 票≈4s）+ 档间静默 2.5s，且换档会重烘贴图（`refreshBake`），不能高频。
+  60 步/秒，240Hz 下 4 帧才对应 1 步、插值帧本身高度冗余。
+- **DRS 是两条判据 + 一个旁证闸 + 一个逃生阀**（`app.js::drsTick`，任一路报警就降档）：
+  - ① 绘制成本 / 屏周期 > `0.62` —— "我们自己画得动吗"；
+  - ② 相邻呈现间隔中位 / 参考节拍 > `1.35` —— "画完之后那一串（光栅 → 合成 → 提交 → 呈现）
+    到底出帧了没有"。**只有 ① 是不够的**：球一多，`drawMs` 可能只有 1.6ms（占屏周期 10%），
+    旧判据完全看不见，DRS 一次都不降档，画面却已经掉到 17 帧。补上 ② 之后实测 200 颗球：
+    `p50 80.6 → 31.8ms`、`11.8 → 31.2 帧/s`（`tools/verify-drs.js`）。
+  - ②的**旁证闸**：`drawMs < 0.5ms` 时判据② **闭嘴**。判据② 只管"出帧没出够"，不管原因；
+    而本机（软件合成 + 一堆虚拟显示器）**8 颗球、`drawMs` 0.2ms 时呈现 p50 就有 31ms** ——
+    这个地板与画面无关。`drawMs` 恰好是"这一帧到底涂了多少像素"的可比量（8 球 ≈ 6.5 万 px
+    → 0.2ms，200 球 ≈ 160 万 px → 2ms），DRS 省的就是这堆像素。所以：**我们自己没涂多少
+    像素的时候，缩画布不可能是解**，此时降档只会白糊画面。阈值 0.5ms 是两条实测夹出来的
+    （80 球 0.9ms 必须放行、8 球 0.2ms 必须拦住）。
+  - ③ **逃生阀**：判据② 是**结果导向**的，它只知道"出帧没出够"，不知道**为什么**。若卡在
+    分辨率管不着的原因上（软件合成器本身 / 虚拟显示器 / 特效叠加），它会永远报"不健康"，
+    把画面永久留在 0.64× —— 而这时降分辨率**一分钱都没省**（实测 6 颗球、`drawMs` 已掉到
+    0.1ms，呈现仍只有 40 帧/s）。所以拿"上次降档当时的绘制成本"当基准，掉到 **35%** 以下
+    就认定"降档的理由已不成立"，放行升档。阈值 0.35 是量出来的：降一档画布只降到 0.83 倍，
+    也就是说**换档本身永远触发不了这个阀**（要连降三档才 0.57），只有负载真的掉了才触发。
+- 迟滞：降 40 票（≈0.7s）、升 120 票（≈2.4s）+ 档间静默 `DRS_DWELL_MS` 2.5s。
+  ⚠️ **升票别往上调**：1.0↔0.64 之间还有 0.88/0.76，恢复一级 = 票数÷帧率 + 静默，
+  240 票在 50Hz 下是 4.8s/级、跌到底再回来要 20 多秒 —— 用户看到的是"负载早没了画面还糊着"。
+  防抖**不靠票数**，靠静默 + 升档额外要求"呈现已回到健康区间"。
+  ⚠️ 迟滞区（呈现 p50 落在参考节拍 1.10× ~ 1.35×）里票数是**衰减而不是清零**：
+  清零会形成**死区**（两路判据都不投票、每帧把票打回 0 → 永久卡档，
+  `tools/probe-drs-stuck.js` 抓到的 `votes` 涨到 433/0、档位 18s 纹丝不动就是这个）。
+- 换档会重烘全部球贴图（`refreshBake`），不能高频。排障先看 `__pbFrameState()` 里的
+  `drsVotes / drsDownCost / idle / presentP50Ms / fxParts` —— `idle=true` 时主循环在
+  `drsTick` 之前就 return 了，一票都不会投（很容易误判成"票数阈值太严"）。
 - **换屏后必须把球夹回场内**（`physics.clampBalls()`，由 `resize()` 调用）。
   不夹会出两种事故，用户看到的都是"换了设备之后球不见了"：
   ① 球留在旧屏**下方** → 掉进"地面"静态体内部（地面厚 400、从 `h` 往下伸 200），

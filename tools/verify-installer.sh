@@ -49,7 +49,16 @@ echo "=============================================="
 # ---------- 安装包自身结构（打包阶段就能查，不用等运行） ----------
 echo
 echo "安装包结构"
-SETUP="dist/DesktopBasketball-Setup-1.0.0.exe"
+# ⚠️ **别把版本号写死**：发版改 `installer.iss` 的 `AppVersion` 之后，写死的路径会静默变成
+#    "找不到安装包"（这一段的判据全靠它，找不到就整段跳过 —— 看着像通过，其实什么都没测）。
+#    取最新的正式包，排除 `*TEST*`（测试模式产物）与 `*.prev`（历史归档）。
+SETUP=""
+for f in dist/DesktopBasketball-Setup-*.exe; do
+  case "$(basename "$f")" in *TEST*|*.prev) continue ;; esac
+  [ -z "$SETUP" ] || [ "$f" -nt "$SETUP" ] && SETUP="$f"
+done
+SETUP_NAME="$(basename "${SETUP:-未找到}")"
+echo "  安装包：$SETUP_NAME"
 if [ -f "$SETUP" ]; then
   ssz=$(stat -c "%s" "$SETUP" 2>/dev/null || echo 0)
   echo "  安装包大小：$((ssz/1024/1024)) MiB"
@@ -217,8 +226,8 @@ else
   warn "未找到安装日志（\$TEMP/db-inno-install*.log）—— 安装时需带 /LOG= 参数"
 fi
 
-# 进程不应残留
-if tasklist //FI "IMAGENAME eq DesktopBasketball-Setup-1.0.0.exe" 2>/dev/null | grep -qi "Setup"; then
+# 进程不应残留（用当前实际产物名，别写死版本号）
+if [ -n "${SETUP:-}" ] && tasklist //FI "IMAGENAME eq $SETUP_NAME" 2>/dev/null | grep -qi "Setup"; then
   bad "安装器进程仍残留（说明没有自动退出）"
 else
   ok "安装器已自动退出，无残留进程"
